@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-6 col-lg-4">
+                <form class="search-bar justify-content-start">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" name="search" id="id_q_large" placeholder="Search trips...">
+                    <label class="form-label" for="id_q_large"></label>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="grid grid--three">
+
+            {% for trip in trips %}
+                <div class="column">
+                    <div class="card">
+                            <div class="card-body">
+                                <a href="{% url 'trip' trip.pk %}"><h2>{{ trip }}</h2></a>
+                                <p>Country: {{ trip.country.get }}</p>
+                                <p>Cities: {{ trip.cities.get }}</p>
+                                <p>From/To: {{ trip.day_from }} - {{ trip.day_to }} </p>
+                                <p>Created by: {{ trip.owner }}</p>
+                                {% for tag in trip.tags.all %}
+                                    <span class="tag">
+                                        <small>{{ tag }}</small>
+                                    </span>
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+{% endblock %}

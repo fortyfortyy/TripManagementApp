@@ -1,0 +1,50 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>TripApp - Manage your trip with friends in a best way!</title>
+
+        <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+        <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+              rel="stylesheet">
+    </head>
+
+    <body>
+        {% include 'snippets/base_css.html' %}
+        {% include 'snippets/base_js.html' %}
+        {% include 'snippets/navbar.html' %}
+
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <!-- Body -->
+        <style type="text/css">
+            .main{
+                min-height: 100vh;
+                height: 100%;
+            }
+        </style>
+        <div class="main">
+            {% block content %}
+
+            {% endblock content %}
+        </div>
+        <!-- End Body -->
+
+        {% include 'snippets/footer.html' %}
+
+        <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    </body>
+</html>

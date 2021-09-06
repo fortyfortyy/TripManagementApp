@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    {% for profile in profiles %}
+        <h3>Username: {{ profile }}</h3>
+        <h5>Profil Image:</h5>
+            <img alt="Profile Image" src="{{ profile.profile_image.url }}" width="300" height="150">
+    {% endfor %}
+
+{% endblock %}

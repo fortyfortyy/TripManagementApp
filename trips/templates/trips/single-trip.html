@@ -1,0 +1,113 @@
+{% extends 'base.html' %}\
+{% block content %}
+    <section class="pb-5 header text-center">
+        <div class="container py-5 text-white">
+             <header class="py-1">
+                <h1 class="display-4 text-white">{{ trip.name }}</h1>
+            </header>
+            <div class="text-lg-start">
+                <span class="tag tag--pill tag--sub tag--lg">
+                    <small>#Tu będą się znajdowały tagi </small>
+                 </span>
+{#                {% for tag in trip.tags.all %}#}
+{#                    <span class="tag tag--pill tag--sub tag--lg">#}
+{#                        <small>{{tag}}</small>#}
+{#                    </span>#}
+{#                {% endfor %}#}
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="col-lg-7 mx-auto">
+                <div class="card border-0 shadow">
+                    <div class="card-body p-5">
+
+                        <!-- Responsive table -->
+                        <div class="table-responsive">
+                            <table class="table m-0">
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">Country</th>
+                                        <td>{{ trip.country.all.get }}</td>
+                                         <!-- Call to action buttons -->
+                                        <td>
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">Cities</th>
+                                        <td>{{ trip.cities.all.get }}</td>
+                                        <td>
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">From/To:</th>
+                                        <td>{{ trip.day_from }} - {{ trip.day_to }}</td>
+                                        <td>
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <th scope="row">Created by:</th>
+                                        <td>{{ trip.owner }}</td>
+                                        <td>
+                                            <ul class="list-inline m-0">
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+                                                </li>
+                                                <li class="list-inline-item">
+                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>Description:</p>
+                            {% for description in trip.description_set.all %}
+                                {{ description.content }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
