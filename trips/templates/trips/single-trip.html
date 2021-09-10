@@ -5,15 +5,32 @@
              <header class="py-1">
                 <h1 class="display-4 text-white">{{ trip.name }}</h1>
             </header>
-            <div class="text-lg-start">
-                <span class="tag tag--pill tag--sub tag--lg">
-                    <small>#Tu będą się znajdowały tagi </small>
-                 </span>
-{#                {% for tag in trip.tags.all %}#}
-{#                    <span class="tag tag--pill tag--sub tag--lg">#}
-{#                        <small>{{tag}}</small>#}
-{#                    </span>#}
-{#                {% endfor %}#}
+            <div class="flex-column">
+
+                <div class="text-lg-start">
+                    <span class="tag tag--pill tag--sub tag--lg">
+                        <small>Tags: </small>
+                        {% for tag in trip.tags.all %}
+                            <small>{{ tag }}</small>
+                        {% endfor %}
+                     </span>
+                </div>
+
+                <div class="text-lg-center">
+                    <span class="tag tag--pill tag--sub tag--lg">
+                        <small># Small friends images in group </small>
+                    </span>
+                </div>
+                <div class="text-lg-end">
+                     <form method="get" action="{% url 'edit-trip' trip.pk %}">
+                         {% csrf_token %}
+                         <input type="submit" value="Edit">
+                     </form>
+                    <form method="get" action="{% url 'delete-trip' trip.pk %}">
+                         {% csrf_token %}
+                         <input type="submit" value="Delete">
+                     </form>
+                </div>
             </div>
         </div>
 
@@ -28,38 +45,47 @@
                                 <tbody>
                                     <tr>
                                         <th scope="row">Country</th>
-                                        <td>{{ trip.country.all.get }}</td>
+                                        {% for country in trip.countries.all %}
+                                            <td>{{ country }}</td>
+                                        {% endfor %}
                                          <!-- Call to action buttons -->
                                         <td>
-                                            <ul class="list-inline m-0">
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
-                                                </li>
-                                            </ul>
+{#                                            <form method="post" href="{% url 'trip-edit-form' trip.pk %}">#}
+{#                                                <ul class="list-inline m-0">#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>#}
+{#                                                    </li>#}
+{#                                                </ul>#}
+{#                                            </form>#}
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row">Cities</th>
-                                        <td>{{ trip.cities.all.get }}</td>
+                                        {% for city in trip.cities.all %}
+                                            <td>{{ city }}</td>
+                                        {% endfor %}
+
                                         <td>
-                                            <ul class="list-inline m-0">
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
-                                                </li>
-                                            </ul>
+{#                                            <form method="post" href="{% url 'trip-edit-form' trip.pk %}">#}
+{#                                                <ul class="list-inline m-0">#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>#}
+{#                                                    </li>#}
+{#                                                </ul>#}
+{#                                            </form>#}
                                         </td>
                                     </tr>
 
@@ -67,42 +93,36 @@
                                         <th scope="row">From/To:</th>
                                         <td>{{ trip.day_from }} - {{ trip.day_to }}</td>
                                         <td>
-                                            <ul class="list-inline m-0">
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
-                                                </li>
-                                            </ul>
+{#                                            <form method="post" href="{% url 'trip-edit-form' trip.pk %}">#}
+{#                                                 {% csrf_token %}#}
+{#                                                <ul class="list-inline m-0">#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>#}
+{#                                                    </li>#}
+{#                                                    <li class="list-inline-item">#}
+{#                                                        <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>#}
+{#                                                    </li>#}
+{#                                                </ul>#}
+{#                                            </form>#}
                                         </td>
                                     </tr>
 
                                     <tr>
                                         <th scope="row">Created by:</th>
                                         <td>{{ trip.owner }}</td>
-                                        <td>
-                                            <ul class="list-inline m-0">
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-primary btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Add"><i class="fa fa-table"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-success btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
-                                                </li>
-                                                <li class="list-inline-item">
-                                                    <button class="btn btn-danger btn-sm rounded-1" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
-                                                </li>
-                                            </ul>
-                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                             <p>Description:</p>
                             {% for description in trip.description_set.all %}
                                 {{ description.content }}
+{#                                <form method="post" href="{% url 'trip-edit-form' trip.pk %}">#}
+{#                                    {% csrf_token %}#}
+{#                                    <input type="submit" value="edit">#}
+{#                                </form>#}
                             {% endfor %}
                         </div>
                     </div>

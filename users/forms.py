@@ -1,50 +1,91 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate
-
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
 
 from users.models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(max_length=200, help_text='Required. Add a valid email address.')
+    # email = forms.EmailField(max_length=60)
 
     class Meta:
         model = Profile
-        fields = ('username', 'email', 'password1', 'password2', )
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super(CustomUserCreationForm, self).__init__(*args, **kwargs)
+
+        self.fields['email'].widget.attrs.update(
+            {'type': 'email', 'name': 'email', 'class': 'form-control', 'placeholder': 'Email address'})
+
+        self.fields['username'].widget.attrs.update(
+            {'type': 'text', 'name': 'username', 'class': 'form-control', 'placeholder': 'Username'})
+
+        self.fields['password1'].widget.attrs.update(
+            {'type': 'password', 'name': 'password1', 'class': 'form-control', 'placeholder': 'Password'})
+
+        self.fields['password2'].widget.attrs.update(
+            {'type': 'password', 'name': 'password2', 'class': 'form-control', 'placeholder': 'Confirm password'})
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
+        if len(email) > 60:
+            raise ValidationError(_('Email is too long. Max 60 characters. Please try another one.'), code='long_email')
         try:
-            account = Profile.objects.exclude(pk=self.instance.pk).get(email=email)
+            account = Profile.objects.get(email=email)
         except Profile.DoesNotExist:
             return email
-        raise forms.ValidationError(f'Email {email} is already in use.', code='email_exists_error')
+        raise ValidationError(f'Email {email} is already in use.', code='email_exists')
 
     def clean_username(self):
         username = self.cleaned_data['username'].lower()
+        if len(username) > 60:
+            raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
+                                  code='long_username')
         try:
-            account = Profile.objects.exclude(pk=self.instance.pk).get(username=username)
+            account = Profile.objects.get(username=username)
         except Profile.DoesNotExist:
             return username
-        raise forms.ValidationError(f'Username {username} is already in use.', code='username_exists_error')
+        raise ValidationError(f'Username {username} is already in use.', code='username_exists')
 
 
-class LoginForm(forms.ModelForm):
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Username', max_length=60, widget=forms.TextInput(attrs={
+        'type': 'text',
+        'name': 'username',
+        'class': 'form-control',
+        'placeholder': 'Username',
+    }))
 
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
+        'type': 'password',
+        'name': 'password',
+        'class': 'form-control',
+        'placeholder': 'Password',
+    }))
 
-    class Meta:
-        model = Profile
-        fields = ('email', 'password')
+    # def __init__(self, *args, **kwargs):
+    #     super(LoginForm, self).__init__(*args, **kwargs)
+    #
+    #     self.fields['email'].widget.attrs.update(
+    #         {'type': 'email', 'name': 'email', 'class': 'form-control', 'placeholder': 'Email address'})
+    #
+    #     self.fields['password'].widget.attrs.update(
+    #         {'type': 'password', 'name': 'password', 'class': 'form-control', 'placeholder': 'Password'})
 
-    def clean(self):
-        cleaned_data = super().clean()
-        breakpoint()
-        email = cleaned_data.get('email')
-        password = cleaned_data.get('password')
-        if not authenticate(email=email, password=password):
-            raise forms.ValidationError('Invalid username or password')
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        if len(username) > 60:
+            raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
+                                  code='long_username',
+                                  )
+        try:
+            Profile.objects.get(username__icontains=username)
+        except Profile.DoesNotExist:
+            raise ValidationError(_("Username doesn't exists."), code='username_no_exists')
+        return username
 
 
 # class ProfileForm(ModelForm):
@@ -58,4 +99,3 @@ class LoginForm(forms.ModelForm):
 #
 #         for name, field in self.fields.items():
 #             field.widget.attrs.update({'class': 'input'})
-

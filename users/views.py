@@ -24,7 +24,7 @@ class RegisterView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.error(request, f'You are already authenticated as {user}')
+            messages.error(request, f'You are already authenticated. ')
             return redirect('trips')
         self.context['registration_form'] = self.form_class
         return render(request, self.template_class, self.context)
@@ -35,13 +35,10 @@ class RegisterView(View):
         """
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            # user.username = user.username.lower()
-            # user.save()
-
+            user = form.save()
             messages.success(request, 'User account was created!')
 
-            login(request, user)
+            # login(request, user)
             return redirect('trips')
 
         self.context['registration_form'] = form
@@ -64,10 +61,10 @@ class LoginView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            email = form.cleaned_data['email'].lower()
+            username = form.cleaned_data['username'].lower()
             password = form.cleaned_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user:
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
                 login(request, user)
                 return redirect('trips')
 

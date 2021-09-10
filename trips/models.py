@@ -75,13 +75,13 @@ class City(models.Model):
 
 
 class Tag(models.Model):
-    name = models.CharField(_('tag name'), max_length=30, blank=True)
+    tag = models.CharField(_('tag name'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
 
     def __str__(self):
-        return self.name
+        return self.tag
 
 
 class Description(models.Model):
