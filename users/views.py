@@ -24,7 +24,7 @@ class RegisterView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.error(request, f'You are already authenticated as {user}')
+            messages.error(request, f'You are already authenticated. ')
             return redirect('trips')
         self.context['registration_form'] = self.form_class
         return render(request, self.template_class, self.context)
@@ -35,10 +35,7 @@ class RegisterView(View):
         """
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            # user.username = user.username.lower()
-            # user.save()
-
+            user = form.save()
             messages.success(request, 'User account was created!')
 
             login(request, user)

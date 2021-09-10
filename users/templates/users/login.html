@@ -15,7 +15,7 @@
     border-bottom-left-radius: 0;
   }
   .form-signin input[type="password"] {
-    margin-bottom: -1px;
+    margin-bottom: 5px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
   }
@@ -26,35 +26,36 @@
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="card card-signin">
-		  <div class="card-body">
-		    <form class="form-signin" method="post">
-                {% csrf_token %}
-				<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
-				<input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
+            <div class="card-body">
+                <form class="form-signin" method="post">
 
-				{% for field in login_form %}
-				    <p>
-				{% for error in field.errors %}
-				<p style="color: red">{{ error }}</p>
-				{% endfor %}
-				    </p>
-				{% endfor %}
-				{% if login_form.non_field_errors %}
-                    <div style="color: red">
-                        <p>{{login_form.non_field_errors}}</p>
-                    </div>
+                    {% csrf_token %}
 
-				{% endif %}
+                    <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+                    <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
 
-				<button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
-				</form>
+                    {% for field in login_form %}
+                        <p>
+                            {% for error in field.errors %}
+                                <p style="color: red">{{ error }}</p>
+                            {% endfor %}
+                        </p>
+                    {% endfor %}
 
-				<div class="d-flex flex-column my-4">
-					<a class="m-auto" href="#">Reset password</a>
-				</div>
-		  </div>
+                    {% if login_form.non_field_errors %}
+                        <div style="color: red">
+                            <p>{{login_form.non_field_errors}}</p>
+                        </div>
+                    {% endif %}
+
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">Log in</button>
+
+                </form>
+                <div class="d-flex flex-column my-4">
+                    <a class="m-auto" href="#">Reset password</a>
+                </div>
+            </div>
 		</div>
-
 	</div>
 </div>
 

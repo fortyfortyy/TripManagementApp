@@ -45,7 +45,6 @@ def get_default_profile_image():
 
 
 class Profile(AbstractUser):
-    username_validator = UnicodeUsernameValidator()
 
     email = models.EmailField(_('email address'), max_length=60, unique=True)
     username = models.CharField(
@@ -53,7 +52,7 @@ class Profile(AbstractUser):
         max_length=60,
         unique=True,
         help_text=_('Required. 60 characters or fewer. Letters, digits and @/./+/-/_ only.'),
-        validators=[username_validator],
+        validators=[AbstractUser.username_validator],
         error_messages={
             'unique': _("A user with that username already exists."),
         },

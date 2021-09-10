@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'trips.apps.TripsConfig',
     'users.apps.UsersConfig',
     'rest_framework',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
