@@ -47,7 +47,6 @@ class TripDetailsView(View):
         self.context['trip'] = trip
         return render(request, self.template_class, self.context)
 
-    def post(self, request, *args, **kwargs):
         breakpoint()
 
 
