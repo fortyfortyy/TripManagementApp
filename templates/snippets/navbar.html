@@ -6,7 +6,7 @@
 	<!-- MEDIUM+ SCREENS -->
 	<div class="d-none d-md-flex flex-row my-auto flex-grow-1 align-items-center">
 		<h5 class="mr-3 font-weight-normal justify-content-start">
-			<a class="p-2 text-dark" href="{% url 'trips' %}">Trip Management App!</a>
+			<a class="p-2 text-dark" href="{% url 'trip-plans' %}">Trip Management App!</a>
 		</h5>
 
 		<div class="d-flex flex-row-reverse flex-grow-1">
@@ -34,11 +34,9 @@
 {#								</div>#}
 {#							</div>#}
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <a class="navbar-brand" href="{% url 'trip-create-form' %} ">
-                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Add Trip</button>
+                            <a class="navbar-brand" href="{% url 'create-trip-plan' %} ">
+                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Add new Trip Plan</button>
                             </a>
-
-
                             Hi, {{ user.username }}
 
 {#                            <img class="account-image rounded-circle m-auto d-block dropdown-toggle" id="id_profile_links" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" src="" alt="" width="40" height="40">#}
@@ -68,7 +66,7 @@
 	<!-- SMALL SCREENS -->
 	<div class="d-flex d-md-none flex-column my-auto align-items-center">
 		<h5 class="font-weight-normal">
-		    <a class="p-2 text-dark" href="{% url 'trips' %}">Home</a>
+		    <a class="p-2 text-dark" href="{% url 'trip-plans' %}">Home</a>
 		</h5>
 		<form class="search-bar justify-content-start" >
 			<input type="text" class="form-control" name="q" id="id_q_small" placeholder="Search...">

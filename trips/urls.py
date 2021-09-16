@@ -2,9 +2,13 @@ from django.urls import path
 from trips import views as ex_views
 
 urlpatterns = [
-    path('', ex_views.TripsView.as_view(), name='trips'),
-    path('trip/<str:pk>', ex_views.TripDetailsView.as_view(), name='trip'),
-    path('trip-create/', ex_views.TripCreate.as_view(), name='trip-create-form'),
-    path('trip-edit/<str:pk>', ex_views.TripUpdateView.as_view(), name='edit-trip'),
-    path('trip-delete/<str:pk>', ex_views.TripDeleteView.as_view(), name='delete-trip'),
+    path('', ex_views.TripPlansView.as_view(), name='trip-plans'),
+    path('create-trip-plan/', ex_views.TripPlanCreateView.as_view(), name='create-trip-plan'),
+    path('trip-plan/<str:pk>', ex_views.TripPlanDetailsView.as_view(), name='trip-plan-details'),
+    # path('delete-trip-plan/<str:pk>', ex_views.TripPlanDeleteView.as_view(), name='delete-trip-plan'),
+
+    path('create-trip/<str:pk>', ex_views.TripCreateView.as_view(), name='create-trip'),
+    path('trip/<str:pk>', ex_views.TripDetailsView.as_view(), name='trip-details'),
+    # path('edit-trip/<str:pk>', ex_views.TripEditView.as_view(), name='edit-trip'),
+    path('delete-trip/<str:pk>', ex_views.TripDeleteView.as_view(), name='delete-trip'),
 ]

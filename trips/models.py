@@ -17,26 +17,36 @@ def get_trip_image_filepath(self, filename):
     return f'trips/{str(self.pk)}/{filename}'
 
 
-class Trip(models.Model):
+class TripPlan(models.Model):
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    name = models.CharField(_('Trip Name'), max_length=200, unique=True)
-    day_from = models.DateField()
-    day_to = models.DateField()
+    members = models.ManyToManyField(Profile, related_name='trip_members', through='TripPlanGroup')
+    name = models.CharField(_("Trip Plan Name"), max_length=200, unique=True)
+    is_private = models.BooleanField(default=True)
+    tags = models.ManyToManyField('Tag', related_name='tags')
+
+    created = models.DateField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def trips(self):
+        trips = self.trip_set.all()
+        return trips
+
+
+class Trip(models.Model):
+    plan = models.ForeignKey(TripPlan, on_delete=models.CASCADE)
 
     # creates a thumbnail resized to maximum size to fit a 100x75 area
     trip_images = models.ImageField(
         max_length=255, blank=True, null=True, upload_to=get_trip_image_filepath, default="")
     countries = models.ManyToManyField('Country', related_name='countries')
     cities = models.ManyToManyField('City', related_name='cities')
-    tags = models.ManyToManyField('Tag', related_name='tags')
+
     created = models.DateField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
-    is_private = models.BooleanField(default=True)
-
-    members = models.ManyToManyField(Profile, related_name='trip_members', through='TripGroup')
-
-    def __str__(self):
-        return self.name
 
     @property
     def descriptions(self):
@@ -44,12 +54,18 @@ class Trip(models.Model):
         # queryset = self.description_set.all().values_list('content')
         return queryset
 
+    @property
+    def date_range(self):
+        days = self.days_set.all().values_list('day_from', 'day_to')
+        for day in days:
+            return day
 
-class TripGroup(models.Model):
+
+class TripPlanGroup(models.Model):
     """
     Możliwość dodawania uprawnień dla osób dodanych do wycieczki
     """
-    trips = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    trip_plan = models.OneToOneField(TripPlan, on_delete=models.CASCADE)
     profiles = models.ForeignKey(Profile, on_delete=models.CASCADE)
     has_edit_perm = models.BooleanField(default=True)
 
@@ -93,3 +109,12 @@ class Description(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class Days(models.Model):
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
+    day_from = models.DateField()
+    day_to = models.DateField()
+    created = models.DateTimeField(auto_now_add=True)
+    id = models.UUIDField(default=uuid.uuid4, unique=True,
+                          primary_key=True, editable=False)

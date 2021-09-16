@@ -2,17 +2,26 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
-from .models import Trip
+from .models import TripPlan, Trip
+
+
+class TripPlanCreateForm(forms.ModelForm):
+    class Meta:
+        model = TripPlan
+        fields = ('name', 'is_private')
+    # day_from = forms.DateField(label='Trip From', widget=forms.DateInput(attrs={'type': 'date'}))
+    # day_to = forms.DateField(label='Trip To', widget=forms.DateInput(attrs={'type': 'date'}))
+    # country = forms.CharField(label='Country', max_length=50)
+    # city = forms.CharField(label='City', max_length=50)
+    # tag = forms.CharField(label='Tag', max_length=50, initial='#')
 
 
 class TripCreateForm(forms.Form):
-
-    name = forms.CharField(label='Trip Name', max_length=200)
-    day_from = forms.DateField(label='Trip From', widget=forms.DateInput(attrs={'type': 'date'}))
-    day_to = forms.DateField(label='Trip To', widget=forms.DateInput(attrs={'type': 'date'}))
-    country = forms.CharField(label='Country/ies', max_length=50)
-    city = forms.CharField(label='City/ies', max_length=50)
-    tag = forms.CharField(label='Tag/s', max_length=50, initial='#')
+    country = forms.CharField(label='Country', max_length=50)
+    city = forms.CharField(label='City', max_length=50)
+    day_from = forms.DateField(label='Date From', widget=forms.DateInput(attrs={'type': 'date'}))
+    day_to = forms.DateField(label='Date To', widget=forms.DateInput(attrs={'type': 'date'}))
+    description = forms.CharField(widget=forms.TextInput(attrs={'size': '40'}))
 
     # class Meta:
     #     model = Trip

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-md-center">
+            <div class="col-6 col-lg-4">
+                <form method="get" class="search-bar justify-content-start">
+                    {% csrf_token %}
+                    <input type="text" class="form-control" name="search_query" id="id_q_large" placeholder="Search by name, country, city, tag">
+                    <label class="form-label" for="id_q_large"></label>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="grid grid--three">
+
+            {% for trip_plan in trip_plans %}
+                {% for trip in trip_plan.trips %}
+                    <div class="column">
+                        <div class="card">
+                                <div class="card-body">
+                                    <p>{{ trip_plan.name }}</p>
+                                    <p>Countries:
+                                        {% for country in trip.countries.all %}
+                                            {{ country }},
+                                        {% endfor %}
+                                    </p>
+                                    <p>Cities:
+                                        {% for city in trip.cities.all %}
+                                            {{ city }},
+                                        {% endfor %}
+                                    </p>
+                                    <p>From/To:
+                                        {% for day in trip.date_range %}
+                                            {{ day|date:'Y-m-d' }} -
+                                        {% endfor %}
+                                    </p>
+                                    <p>Created by: {{ trip_plan.owner }}</p>
+                                    {% for tag in trip.tags.all %}
+                                        <span class="tag">
+                                            <small>{{ tag }}</small>
+                                        </span>
+                                    {% endfor %}
+                                    <a href="{% url 'create-trip' trip_plan.pk %} ">
+                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Add New Trip</button>
+                                    </a>
+                                    <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
+                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">More Details</button>
+                                    </a>
+                                </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

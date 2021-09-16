@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'TripManagementApp.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'tripmanagementapp',
+        'NAME': 'tripplanapp',
         'ENGINE': 'django.db.backends.postgresql',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
