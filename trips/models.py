@@ -30,10 +30,39 @@ class TripPlan(models.Model):
     def __str__(self):
         return self.name
 
+    # @property
+    # def trips(self):
+    #     trips = self.trip_set.all()
+    #     return trips
+
     @property
-    def trips(self):
-        trips = self.trip_set.all()
-        return trips
+    def dates(self):
+        trips = Trip.objects.filter(plan=self.id)
+        dates = []
+        for trip in trips:
+            if trip.date_range:
+                for date in trip.date_range:
+                    dates.append(date.strftime('%y-%m-%d'))
+        dates.sort()
+        return [dates[0], dates[-1]]
+
+    @property
+    def countries(self):
+        trips = Trip.objects.filter(plan=self.id)
+        countries = []
+        for trip in trips:
+            for country_obj in trip.countries.all():
+                countries.append(country_obj.country)
+        return countries
+
+    @property
+    def cities(self):
+        trips = Trip.objects.filter(plan=self.id)
+        cities = []
+        for trip in trips:
+            for city_obj in trip.cities.all():
+                cities.append(city_obj.city)
+        return cities
 
 
 class Trip(models.Model):

@@ -25,7 +25,7 @@ class RegisterView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.error(request, f'You are already authenticated. ')
-            return redirect('trips')
+            return redirect('trip-plans')
         self.context['registration_form'] = self.form_class
         return render(request, self.template_class, self.context)
 
@@ -39,7 +39,7 @@ class RegisterView(View):
             messages.success(request, 'User account was created!')
 
             # login(request, user)
-            return redirect('trips')
+            return redirect('trip-plans')
 
         self.context['registration_form'] = form
         return render(request, self.template_class, self.context)
@@ -53,7 +53,7 @@ class LoginView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             messages.error(request, "Sorry you're already logged in!")
-            return redirect('trips')
+            return redirect('trip-plans')
 
         self.context['form'] = self.form_class
         return render(request, self.template_class, self.context)
@@ -66,7 +66,7 @@ class LoginView(View):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('trips')
+                return redirect('trip-plans')
 
         self.context['form'] = form
         return render(request, self.template_class, self.context)
@@ -76,4 +76,4 @@ class LogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         messages.info(request, 'User was logged out!')
-        return redirect('trips')
+        return redirect('trip-plans')

@@ -20,11 +20,16 @@
         {% include 'snippets/navbar.html' %}
 
         {% if messages %}
-            <ul class="messages">
+            <div class="alert alert-danger col-sm-3" role="alert">
                 {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {{ message }}
                 {% endfor %}
-            </ul>
+            </div>
+{#            <ul class="messages">#}
+{#                {% for message in messages %}#}
+{#                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
         {% endif %}
 
         <!-- Body -->

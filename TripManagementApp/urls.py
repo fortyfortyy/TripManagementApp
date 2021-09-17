@@ -23,7 +23,7 @@ from users.views import RegisterView, LoginView, LogoutView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('users.urls')),
-    path('trips/', include('trips.urls')),
+    path('plans/', include('trips.urls')),
     # path('api', include('api.urls')),
 ]
 if settings.DEBUG:

@@ -14,44 +14,24 @@
     </div>
     <div class="container">
         <div class="grid grid--three">
-
             {% for trip_plan in trip_plans %}
-                {% for trip in trip_plan.trips %}
-                    <div class="column">
-                        <div class="card">
-                                <div class="card-body">
-                                    <p>{{ trip_plan.name }}</p>
-                                    <p>Countries:
-                                        {% for country in trip.countries.all %}
-                                            {{ country }},
-                                        {% endfor %}
-                                    </p>
-                                    <p>Cities:
-                                        {% for city in trip.cities.all %}
-                                            {{ city }},
-                                        {% endfor %}
-                                    </p>
-                                    <p>From/To:
-                                        {% for day in trip.date_range %}
-                                            {{ day|date:'Y-m-d' }} -
-                                        {% endfor %}
-                                    </p>
-                                    <p>Created by: {{ trip_plan.owner }}</p>
-                                    {% for tag in trip.tags.all %}
-                                        <span class="tag">
-                                            <small>{{ tag }}</small>
-                                        </span>
-                                    {% endfor %}
-                                    <a href="{% url 'create-trip' trip_plan.pk %} ">
-                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Add New Trip</button>
-                                    </a>
-                                    <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
-                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">More Details</button>
-                                    </a>
-                                </div>
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="container">
+                            <div class="card-title"><h2>{{ trip_plan.name }}</h2></div>
+                                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
+                                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
+                                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
+                                <p>Created by: {{ trip_plan.owner }}</p>
+                                <p>{% for tag in trip_plan.tags.all %}{{ tag }} {% endfor %}</p>
+                            </div>
+                            <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
+                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">More Details</button>
+                            </a>
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             {% endfor %}
         </div>
     </div>

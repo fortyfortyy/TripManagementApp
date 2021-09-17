@@ -24,14 +24,14 @@ class TripPlansView(View):
                 Q(name__icontains=search_query) |
                 Q(trip__countries__country__icontains=search_query) |
                 Q(trip__cities__city__icontains=search_query) |
-                Q(trip__tags__tag__icontains=search_query)
-            )
+                Q(tags__tag__icontains=search_query)
+            ).distinct()
             self.context['trip_plans'] = trip_plans
         return render(request, self.template_class, self.context)
 
 
 class TripPlanDetailsView(View):
-    template_class = 'trips/trip-details.html'
+    template_class = 'trips/trip-plan-details.html'
     context = {}
 
     def get(self, request, *args, **kwargs):
@@ -39,8 +39,27 @@ class TripPlanDetailsView(View):
         trips = Trip.objects.filter(plan=trip_plan)
         self.context['trips'] = trips
         self.context['trip_plan'] = trip_plan
+
+        if request.GET.get('edit') is not None:
+            self.context['edit'] = True
+
         return render(request, self.template_class, self.context)
 
+
+class TripPlanEditView(View):
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+class TripEditView(View):
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        pass
 
 # TODO w tym miejscu potrzeba weryfikacji czy jest się zalogowanym (w przyszłości)
 class TripPlanCreateView(View):
@@ -99,7 +118,7 @@ class TripCreateView(View):
 
 # TODO w tym miejscu potrzeba weryfikacji czy jest się zalogowanym (w przyszłości)
 class TripDetailsView(View):
-    template_class = 'trips/trip-details.html'
+    template_class = 'trips/trip-plan-details.html'
     context = {}
 
     def get(self, request, *args, **kwargs):
