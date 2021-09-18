@@ -3,11 +3,17 @@
     <div class="container">
         <div class="card text-center" style="width: 18rem;">
             <div class="card-body ">
-                <form action="" method="post">
+                <form method="post">
                     {% csrf_token %}
-                    <p> Are you sure you want to delete "{{ trip }}"?</p>
-                    <a href="{% url 'trips' %}">Go back</a>
-                    <input type="submit" value="Confirm">
+                    {% if trip %}
+                        <p> Are you sure you want to delete trip in {% for country in trip.countries.all %}{{ country }}{% endfor %}?</p>
+                        <a href="{% url 'trip-plan-details' trip.plan.pk %}">Go back</a>
+                        <input type="submit" value="Confirm">
+                    {% else %}
+                        <p> Are you sure you want to delete {{ trip_plan.name }}? </p>
+                        <a href="{% url 'trip-plan-details' trip.plan.pk %}">Go back</a>
+                        <input type="submit" value="Confirm">
+                    {% endif %}
                 </form>
             </div>
         </div>

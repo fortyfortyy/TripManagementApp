@@ -43,8 +43,10 @@ class TripPlan(models.Model):
             if trip.date_range:
                 for date in trip.date_range:
                     dates.append(date.strftime('%y-%m-%d'))
-        dates.sort()
-        return [dates[0], dates[-1]]
+        if dates:
+            dates.sort()
+            return [dates[0], dates[-1]]
+        return ''
 
     @property
     def countries(self):

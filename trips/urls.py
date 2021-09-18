@@ -6,7 +6,7 @@ urlpatterns = [
     path('create-trip-plan/', ex_views.TripPlanCreateView.as_view(), name='create-trip-plan'),
     path('trip-plan/<str:pk>', ex_views.TripPlanDetailsView.as_view(), name='trip-plan-details'),
     path('edit-trip-plan/<str:pk>', ex_views.TripPlanEditView.as_view(), name='edit-trip-plan'),
-    # path('delete-trip-plan/<str:pk>', ex_views.TripPlanDeleteView.as_view(), name='delete-trip-plan'),
+    path('delete-trip-plan/<str:pk>', ex_views.TripPlanDeleteView.as_view(), name='delete-trip-plan'),
 
 
     path('create-trip/<str:pk>', ex_views.TripCreateView.as_view(), name='create-trip'),

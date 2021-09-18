@@ -2,127 +2,119 @@
 {% block content %}
     {% if trip_plan.owner == request.user %}
         <section class="pb-5 header text-center">
-        <div class="container py-5 text-white">
-             <header class="py-1">
-                <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
-                 {% if edit == True %}
-                    <a href="{% url 'edit-trip-plan' trip_plan.pk %} ">
-                        <button style="background-color: white" class="btn btn-primary text-dark" type="button">Edit Plan Trip</button>
-                    </a>
-                {% endif %}
-            </header>
-            <div class="flex-column">
+            <div class="container py-5 text-white">
+                 <header class="py-1">
+                    <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
+                     {% if edit == True %}
+                        <a href="{% url 'edit-trip-plan' trip_plan.pk %} ">
+                            <button style="background-color: white" class="btn btn-primary text-dark" type="button">Edit Plan Trip</button>
+                        </a>
+                    {% endif %}
+                </header>
+                <div class="flex-column">
 
-                <div class="text-lg-start">
-                    <span class="tag tag--pill tag--sub tag--lg">
-                        {% if trip_plan.tags.all %}<small>Tags: </small>{% endif %}
-                        {% for tag in trip_plan.tags.all %}
-                            <small>{{ tag }}</small>
-                        {% endfor %}
-                     </span>
-                </div>
+                    <div class="text-lg-start">
+                        <span class="tag tag--pill tag--sub tag--lg">
+                            {% if trip_plan.tags.all %}<small>Tags: </small>{% endif %}
+                            {% for tag in trip_plan.tags.all %}
+                                <small>{{ tag }}</small>
+                            {% endfor %}
+                         </span>
+                    </div>
 
-                <div class="text-lg-center">
-                    <span class="tag tag--pill tag--sub tag--lg">
-                        <small># Small friends images in group </small>
-                    </span>
-                </div>
-                <div class="text-lg-end">
-                         <form method="get" action="{% url 'trip-plan-details' trip_plan.pk %}">
-                             {% csrf_token %}
-                         <input type="submit" value="Edit the Trip Plan" name="edit">
-                         </form>
-{#                        <form method="get" action="{% url 'delete-trip' trip.pk %}">#}
-{#                             {% csrf_token %}#}
-                         <input type="submit" value="Delete Trip Plan">
-{#                        </form>#}
-{#                        <form method="get" action="{% url 'create-trip' trip_plan.pk %}">#}
-{#                             {% csrf_token %}#}
-                         <input type="submit" value="Add Trip">
-{#                        </form>#}
-                </div>
-            </div>
-        </div>
+                    <div class="text-lg-center">
+                        <span class="tag tag--pill tag--sub tag--lg">
+                            <small># Small friends images in group </small>
+                        </span>
+                    </div>
 
-    <div class="container text-white">
-        <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
-        <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
-        <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
-    </div>
-{#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
-{#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
-        {% for trip in trips %}
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">TRIP</h5>
-                            <p class="card-text">Days: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</p>
-                            <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
-                            <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
-                            <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
-                            {% if edit == True %}
-                                <a href="{% url 'edit-trip' trip.pk %} ">
-                                    <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Edit Trip</button>
-                                </a>
-                            {% endif %}
-                            <a href="{% url 'trip-plan-details' trip.pk %} ">
-                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Delete Trip</button>
-                            </a>
-                        </div>
+                    <div class="text-lg-end">
+                        {% if edit != True %}
+                             <form method="get" action="{% url 'trip-plan-details' trip_plan.pk %}">
+                                 {% csrf_token %}
+                                 <input type="submit" value="Edit" name="edit">
+                             </form>
+                        {% endif %}
+                        <form method="get" action="{% url 'delete-trip-plan' trip_plan.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Delete Trip Plan">
+                        </form>
+                        <form method="get" action="{% url 'create-trip' trip_plan.pk %}">
+                            {% csrf_token %}
+                            <input type="submit" value="Add Trip">
+                        </form>
                     </div>
                 </div>
             </div>
-        {% endfor %}
-    </section>
+
+            <div class="container text-white">
+                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
+                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
+                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
+            </div>
+    {#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+    {#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
+            {% for trip in trips %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>
+                                <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
+                                <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
+                                <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
+                                {% if edit == True %}
+                                    <a href="{% url 'edit-trip' trip.pk %} ">
+                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Edit Trip</button>
+                                    </a>
+                                    <a href="{% url 'delete-trip' trip.pk %} ">
+                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Delete Trip</button>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
     {% else %}
         <section class="pb-5 header text-center">
-        <div class="container py-5 text-white">
-             <header class="py-1">
-                <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
-            </header>
-            <div class="flex-column">
-
-                <div class="text-lg-start">
-                    <span class="tag tag--pill tag--sub tag--lg">
-                        {% if trip_plan.tags.all %}<small>Tags: </small>{% endif %}
-                        {% for tag in trip_plan.tags.all %}
-                            <small>{{ tag }}</small>
-                        {% endfor %}
-                     </span>
-                </div>
-            </div>
-        </div>
-
-    <div class="container text-white">
-        <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
-        <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
-        <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
-    </div>
-{#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
-{#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
-        {% for trip in trips %}
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">TRIP</h5>
-                            <p class="card-text">Days: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</p>
-                            <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
-                            <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
-                            <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
-
-                            <a href="{% url 'trip-plan-details' trip.pk %} ">
-                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Edit Trip</button>
-                            </a>
-                            <a href="{% url 'trip-plan-details' trip.pk %} ">
-                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Delete Trip</button>
-                            </a>
-                        </div>
+            <div class="container py-5 text-white">
+                 <header class="py-1">
+                    <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
+                </header>
+                <div class="flex-column">
+                    <div class="text-lg-start">
+                        <span class="tag tag--pill tag--sub tag--lg">
+                            {% if trip_plan.tags.all %}<small>Tags: </small>{% endif %}
+                            {% for tag in trip_plan.tags.all %}
+                                <small>{{ tag }}</small>
+                            {% endfor %}
+                         </span>
                     </div>
                 </div>
             </div>
-        {% endfor %}
-    </section>
+            <div class="container text-white">
+                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
+                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
+                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
+            </div>
+    {#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
+    {#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
+            {% for trip in trips %}
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>
+                                <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
+                                <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
+                                <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
     {% endif %}
 {% endblock %}

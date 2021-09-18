@@ -1,5 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import ModelForm
 from django.utils.translation import ugettext_lazy as _
 
 from .models import TripPlan, Trip
@@ -9,11 +10,19 @@ class TripPlanCreateForm(forms.ModelForm):
     class Meta:
         model = TripPlan
         fields = ('name', 'is_private')
-    # day_from = forms.DateField(label='Trip From', widget=forms.DateInput(attrs={'type': 'date'}))
-    # day_to = forms.DateField(label='Trip To', widget=forms.DateInput(attrs={'type': 'date'}))
-    # country = forms.CharField(label='Country', max_length=50)
-    # city = forms.CharField(label='City', max_length=50)
-    # tag = forms.CharField(label='Tag', max_length=50, initial='#')
+
+        # TODO w jaki sposób dodać też tagi do tego formularza jeśli ma ManyToMany field?
+        # fields = ('name', 'is_private', 'tags')
+
+    # https://sayari3.com/articles/16-how-to-pass-user-object-to-django-form/
+    # def __init__(self, *args, **kwargs):
+    #     # breakpoint()
+    #     self.request = kwargs.pop("request")  # store value of request
+    #     super().__init__(*args, **kwargs)
+    #
+    # def clean(self):
+    #     print(self.request.user)  # request now available here also
+    #     return self.request.user
 
 
 class TripCreateForm(forms.Form):
@@ -59,3 +68,11 @@ class TripCreateForm(forms.Form):
             raise ValidationError(_("Sorry, this trip name already exists. Please try to write another trip name."),
                                   code='trip_exists_error')
         return name
+
+
+# TODO edycja pojedynczego tripa za pomocą formset'ów
+# class TripEditForm(ModelForm):
+#     pass
+    # class Meta:
+    #     model = Trip
+        # fields = ('countries', 'cities', 'descriptions', 'date_range')

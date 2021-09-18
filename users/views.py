@@ -24,7 +24,7 @@ class RegisterView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.error(request, f'You are already authenticated. ')
+            messages.error(request, f'You are already authenticated as {request.user}')
             return redirect('trip-plans')
         self.context['registration_form'] = self.form_class
         return render(request, self.template_class, self.context)
