@@ -1,41 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
+    <section class="pb-5 header text-center">
     {% if trip_plan %}
-        <section class="pb-5 header text-center">
         <div class="container py-5 text-white">
              <header class="py-1">
                 <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
             </header>
         </div>
     {% endif %}
-    <div class="container">
-       <div class="card">
-           <div class="card-body">
-                <form class="form-inline" method="post">
-                    <div class="form-row align-items-center">
-                        {% csrf_token %}
-                            {{ form.as_p }}
-{#                        {% for field in form %}#}
-{#                            {{ field}}#}
-{#                            {% for error in field.errors %}#}
-{#                                <p style="color: red" class="">{{ error }}</p>#}
-{#                            {% endfor %}#}
+        <div class="container">
+            <div class="card">
+                <div class="card-body">
+                      <form method="post">
+                        {{ formset.management_form }}
+                        <table>
+                            {% for form in formset %}
+                            {{ form }}
+                            {% endfor %}
+                        </table>
+                    </form>
 
-{#                        {% endfor %}#}
-
-                        {% if registration_form.non_field_errors %}
-                            <div style="color: red">
-                                <p>{{registration_form.non_field_errors}}</p>
-                            </div>
-
-                        {% endif %}
-
-                        <input type="submit" value="Create">
-
-                    </div>
-                </form>
-           </div>
+                </div>
+            </div>
         </div>
-    </div>
-
+    </section>
 {% endblock %}

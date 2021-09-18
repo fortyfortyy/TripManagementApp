@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+    * {
+    margin: 0;
+    padding: 0
+}
+
+.card {
+    width: 350px;
+    background-color: #efefef;
+    border: none;
+    cursor: pointer;
+    transition: all 0.5s
+}
+
+.image img {
+    transition: all 0.5s
+}
+
+.card:hover .image img {
+    transform: scale(1.5)
+}
+
+
+.name {
+    font-size: 22px;
+    font-weight: bold
+}
+
+.idd {
+    font-size: 14px;
+    font-weight: 600
+}
+
+.email {
+    font-size: 14px
+}
+
+.number {
+    font-size: 22px;
+    font-weight: bold
+}
+
+.follow {
+    font-size: 12px;
+    font-weight: 500;
+    color: #444444
+}
+
+.btn1 {
+    height: 40px;
+    width: 150px;
+    border: none;
+    background-color: #3C70A1;
+    color: white;
+    font-size: 15px
+}
+
+.btn1-a {
+    color: #3C70A1;
+    background-color: white;
+}
+
+.text span {
+    font-size: 13px;
+    color: #545454;
+    font-weight: 500
+}
+
+.icons i {
+    font-size: 19px
+}
+
+hr .new1 {
+    border: 1px solid
+}
+
+.join {
+    font-size: 14px;
+    color: #a0a0a0;
+    font-weight: bold
+}
+
+.date {
+    background-color: #ccc
+}
+    </style>
+    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+        <div class="card p-4">
+            <div class=" image d-flex flex-column justify-content-center align-items-center"> <button class="btn"> <img src="{{ profile.image.url }}" height="100" width="100" /></button>
+                {% if profile.get_full_name %}
+                    <span class="name mt-3">{{ profile.get_full_name }}</span>
+                {% else %}
+                    <br>
+                {% endif %}
+                <span class="idd">@{{ profile }}</span>
+                {% if request.user.pk == profile.pk %}
+                <div class="d-flex flex-row justify-content-center align-items-center gap-2"> <span class="email">{{ profile.email }}</span> <span><i class="fa fa-copy"></i></span> </div>
+                {% endif %}
+                <div class="d-flex flex-row justify-content-center align-items-center mt-3"> <span class="number">1069 <span class="follow">Followers</span></span> </div>
+                {% if request.user.pk == profile.pk %}
+                    <div class=" d-flex mt-2">
+                        <form action="{% url 'user-profile' profile.pk %}" method="get">
+                            {% csrf_token %}
+                            <button name="edit-profile" class="btn btn-trip-login-logout" type="submit" value="edit-profile">Edit Profile</button>
+                        </form>
+                    </div>
+                {% endif %}
+                {% if profile.short_intro %}
+                    <div class="text mt-3"> <span>{{ profile.short_intro }}.<br><br> Artist/ Creative Director by Day #NFT minting@ with FND night. </span> </div>
+                {% endif %}
+                <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span> </div>
+                <div class=" px-2 rounded mt-4 date "> <span class="join">Joined {{ profile.date_joined|date }}</span> </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

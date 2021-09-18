@@ -50,6 +50,7 @@ def get_default_profile_image():
 class Profile(AbstractUser):
 
     email = models.EmailField(_('email address'), max_length=60, unique=True)
+    short_intro = models.CharField(_('short intro'), max_length=200, null=True, blank=True)
     username = models.CharField(
         _('username'),
         max_length=60,

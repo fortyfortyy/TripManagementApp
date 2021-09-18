@@ -66,50 +66,37 @@ class LoginForm(forms.Form):
         'placeholder': 'Password',
     }))
 
-
-# class LoginForm(forms.ModelForm):
-#     password = forms.CharField(label='Password', widget=forms.PasswordInput)
-#
-#     # def __init__(self, *args, **kwargs):
-#     #     super(LoginForm, self).__init__(*args, **kwargs)
-#     #
-#     #     self.fields['email'].widget.attrs.update(
-#     #         {'type': 'email', 'name': 'email', 'class': 'form-control', 'placeholder': 'Email address'})
-#     #
-#     #     self.fields['password'].widget.attrs.update(
-#     #         {'type': 'password', 'name': 'password', 'class': 'form-control', 'placeholder': 'Password'})
-#
-#     def clean_username(self):
-#         username = self.cleaned_data['username'].lower()
-#         if len(username) > 60:
-#             raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
-#                                   code='long_username',
-#                                   )
-#         try:
-#             Profile.objects.get(username__icontains=username)
-#         except Profile.DoesNotExist:
-#             raise ValidationError(_("Username doesn't exists."), code='username_no_exists')
-#         return username
-#
-#     def clean(self):
-#         cleaned_data = super().clean()
-#         email = cleaned_data.get('email').lower()
-#         if len(email) > 60:
-#             raise ValidationError(_('Email is too long. Max 60 characters. Please try another one.'), code='long_email')
-#
-#         password = cleaned_data.get('password')
-#         if not authenticate(email=email, password=password):
-#             raise ValidationError('Invalid username or password')
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     username = cleaned_data.get('username').lower()
+    #     if len(username) > 60:
+    #         raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
+    #                               code='long_username')
+    #
+    #     password = cleaned_data.get('password')
+    #     if not authenticate(email=username, password=password):
+    #         raise ValidationError('Invalid username or password', code='invalid_authenticate')
 
 
-# class ProfileForm(ModelForm):
-#     class Meta:
-#         model = Profile
-#         fields = ['first_name', 'last_name', 'username',
-#                   'email', 'profile_image', 'location']
-#
-#     def __init__(self, *args, **kwargs):
-#         super(ProfileForm, self).__init__(*args, **kwargs)
-#
-#         for name, field in self.fields.items():
-#             field.widget.attrs.update({'class': 'input'})
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ('first_name', 'last_name', 'username', 'profile_image', 'location', 'short_intro')
+
+    def __init__(self, *args, **kwargs):
+        super(ProfileForm, self).__init__(*args, **kwargs)
+
+        self.fields['first_name'].widget.attrs.update(
+            {'type': 'text', 'name': 'first_name', 'class': 'form-control', 'placeholder': 'first name'})
+
+        self.fields['last_name'].widget.attrs.update(
+            {'type': 'text', 'name': 'last_name', 'class': 'form-control', 'placeholder': 'surname'})
+
+        self.fields['username'].widget.attrs.update(
+            {'type': 'text', 'name': 'username', 'class': 'form-control', 'placeholder': 'username'})
+
+        self.fields['short_intro'].widget.attrs.update(
+            {'type': 'text', 'name': 'short_intro', 'class': 'form-control', 'placeholder': 'bio'})
+
+        self.fields['location'].widget.attrs.update(
+            {'type': 'text', 'name': 'location', 'class': 'form-control', 'placeholder': 'location'})

@@ -4,6 +4,7 @@ from django.forms import formset_factory, modelformset_factory, inlineformset_fa
 from django.shortcuts import render, redirect
 from django.views import View
 from django.db.models import Q
+from django.views.generic import UpdateView
 
 from trips.forms import TripPlanCreateForm, TripCreateForm
 # from trips.forms import TripPlanCreateForm, TripCreateForm, TripEditForm
@@ -165,19 +166,20 @@ class TripDetailsView(LoginRequiredMixin, View):
         return render(request, self.template_class, self.context)
 
 
-class TripEditView(LoginRequiredMixin, View):
+class TripEditView(LoginRequiredMixin, UpdateView):
     login_url = 'login'
-    template_class = 'trips/trip-form.html'
+    template_name = 'trips/trip-form.html'
     # form_class = TripEditForm
-    context = {}
+    model = Trip
+    fields = '__all__'
 
     # TODO jak stworzyć poprawnie formset dla tego formularza?
     # https://docs.djangoproject.com/en/3.2/topics/forms/modelforms/#using-a-model-formset-in-a-view
     # https://docs.djangoproject.com/en/3.2/topics/forms/formsets/#can-order
-
+    #
     # TripFormSet = inlineformset_factory(Trip, Country, City, )
     # TripFormSet = modelformset_factory(Trip, form=TripEditForm, extra=2)
-    #
+
     # def get(self, request, *args, **kwargs):
     #     # trip = Trip.objects.get(pk=kwargs['pk'])
     #     formset = self.TripFormSet(queryset=Trip.objects.get(pk=kwargs['pk']))
@@ -195,15 +197,21 @@ class TripEditView(LoginRequiredMixin, View):
     #     #         })
     #     self.context['formset'] = formset
     #     return render(request, self.template_class, self.context)
-    #
-    # def post(self, request, *args, **kwargs):
-    #     formset = self.TripFormSet(request.POST)
-    #     if formset.is_valid():
-    #         breakpoint()
-    #         formset.save_m2m()
-    #
-    #     self.context['formset'] = formset
-    #     return render(request, self.template_class, self.context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        formset = modelformset_factory(Trip, fields='__all__', extra=2)
+        context['formset'] = formset
+        return context
+
+    def post(self, request, *args, **kwargs):
+        formset = self.TripFormSet(request.POST)
+        if formset.is_valid():
+            breakpoint()
+            formset.save_m2m()
+
+        self.context['formset'] = formset
+        return render(request, self.template_class, self.context)
 
 
 # class TripEditView(View):
