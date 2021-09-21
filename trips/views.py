@@ -200,14 +200,18 @@ class TripEditView(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        formset = modelformset_factory(Trip, fields='__all__', extra=2)
+        # breakpoint()
+        TripFormSet = modelformset_factory(Trip, fields='__all__', extra=2)
+        # breakpoint()
+        formset = TripFormSet(queryset=Trip.objects.filter(pk=self.kwargs['pk']))
         context['formset'] = formset
+        # breakpoint()
         return context
 
     def post(self, request, *args, **kwargs):
         formset = self.TripFormSet(request.POST)
         if formset.is_valid():
-            breakpoint()
+            # breakpoint()
             formset.save_m2m()
 
         self.context['formset'] = formset

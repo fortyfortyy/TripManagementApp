@@ -59,10 +59,15 @@
                     <div class="col-sm-6">
                         <div class="card">
                             <div class="card-body">
-                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>
+                                <h5 class="card-title">Dates: {{trip.date_range|first}} - {{ trip.date_range|last }}</h5>
+{#                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>#}
                                 <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
                                 <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
-                                <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
+                                <p class="card-text">Description:
+                                   {% for description in trip.descriptions %}
+                                       <small>{{ description }}</small>
+                                   {% endfor %}
+                                </p>
                                 {% if edit == True %}
                                     <a href="{% url 'edit-trip' trip.pk %} ">
                                         <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Edit Trip</button>

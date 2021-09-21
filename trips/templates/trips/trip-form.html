@@ -1,26 +1,37 @@
 {% extends 'base.html' %}
 {% block content %}
     <section class="pb-5 header text-center">
-    {% if trip_plan %}
-        <div class="container py-5 text-white">
-             <header class="py-1">
-                <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
-            </header>
-        </div>
-    {% endif %}
         <div class="container">
-            <div class="card">
-                <div class="card-body">
-                      <form method="post">
-                        {{ formset.management_form }}
-                        <table>
-                            {% for form in formset %}
-                            {{ form }}
-                            {% endfor %}
-                        </table>
-                    </form>
-
+            <div class="row mt-4 mb-4 p-3 d-flex justify-content-center">
+                <header class="py-1 col-6">
+                    <h1 class="display-4 text-white">{{ trip.plan.name }}</h1>
+                </header>
+            </div>
+            <div class="row row justify-content-between row-cols-2" >
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="col-md-5">
+                    <div class="card p-5 py-5">
+                        <form method="post">
+                            {{ form.id }}
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="text-right">Trip images: </h4>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6"><label class="labels">From</label><input type="date" class="form-control" name='date_from' value="{{ profile.username }}"></div>
+                                <div class="col-md-6"><label class="labels">To</label><input type="date" class="form-control" name='day_to' value="{{ profile.username }}"></div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-6"><label class="labels">City</label><input type="text" class="form-control" placeholder="city" name='form-{{ form.id }}-cities' id='id_form-{{ form.id }}-cities' value='{{ form.city.get|default:'' }}'></div>
+                                <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" name='form-{{ form.id }}-countries' id='id_form-{{ form.id }}-countries' value='{{ form.countries.country|default:'' }}'></div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-12"><label class="labels">Description</label><input type="text" class="form-control" placeholder="description" name='short_intro' value="{{ profile.short_intro|default_if_none:'' }}"></div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
         </div>
     </section>
