@@ -29,10 +29,10 @@ class UserView(LoginRequiredMixin, View):
         return render(request, self.template_class, self.context)
 
     def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST, request.FILES)
+        form = self.form_class(request.POST, request.FILES, instance=Profile.objects.get(pk=kwargs['pk']))
         if form.is_valid():
             form.save()
-            messages.success(request, "Profile has been updated")
+            messages.success(request, "Profile has been updated.")
             return redirect('trip-plans')
 
         messages.error(request, "Something gone wrong. Try again.")

@@ -30,8 +30,9 @@ form input {
         <div class="container rounded bg-white mt-5 mb-5">
             <div class="row">
                 <div class="col-md-3 border-right">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" src="{{ profile.profile_image.url }}" alt="user-image">
-                        <span class="font-weight-bold">{{ profile.get_full_name }}</span>
+                    <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                        <img class="img-thumbnail" src="{{ profile.profile_image.url }}" alt="user-image">
+                        <span class="font-weight-bold">{{ profile.get_full_name|default:'Name and Surname' }}</span>
                         <span class="text-black-50">{{ profile.email }}</span>
                     </div>
                 </div>
@@ -42,24 +43,24 @@ form input {
                         </div>
                         <form method="post">
                             {% csrf_token %}
-                            {{form.as_p}}
+{#                            {{form.as_p}}#}
                             <div class="row mt-2">
                                 <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" name='first_name' value="{{ profile.first_name }}"></div>
                                 <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" placeholder="surname" name='last_name' value="{{ profile.last_name }}"></div>
                             </div>
                             <div class="row mt-3">
                                 <div class="col-md-12"><label class="labels">Username</label><input type="text" class="form-control" placeholder="enter address" name='username' value="{{ profile.username }}"></div>
-                                <div class="col-md-12"><label class="labels">Bio</label><input type="text" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro }}"></div>
+                                <div class="col-md-12"><label class="labels">Bio</label><input type="text" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro|default_if_none:'' }}"></div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-6"><label class="labels">Location</label><input type="text" class="form-control" placeholder="country" name="location" value="{{ profile.location }}"></div>
+                                <div class="col-md-6"><label class="labels">Location</label><input type="text" class="form-control" placeholder="country" name="location" value="{{ profile.location|default_if_none:'' }}"></div>
                             </div>
                             <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Save Profile</button></div>
-{#                            {% if registration_form.errors %}#}
-{#                                <div style="color: red">#}
-{#                                    <p>{{registration_form.non_field_errors}}</p>#}
-{#                                </div>#}
-{#                            {% endif %}#}
+                            {% if registration_form.errors %}
+                                <div style="color: red">
+                                    <p>{{registration_form.non_field_errors}}</p>
+                                </div>
+                            {% endif %}
                         </form>
                     </div>
                 </div>

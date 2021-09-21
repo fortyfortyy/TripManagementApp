@@ -83,20 +83,20 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('first_name', 'last_name', 'username', 'profile_image', 'location', 'short_intro')
 
-    def __init__(self, *args, **kwargs):
-        super(ProfileForm, self).__init__(*args, **kwargs)
-
-        self.fields['first_name'].widget.attrs.update(
-            {'type': 'text', 'name': 'first_name', 'class': 'form-control', 'placeholder': 'first name'})
-
-        self.fields['last_name'].widget.attrs.update(
-            {'type': 'text', 'name': 'last_name', 'class': 'form-control', 'placeholder': 'surname'})
-
-        self.fields['username'].widget.attrs.update(
-            {'type': 'text', 'name': 'username', 'class': 'form-control', 'placeholder': 'username'})
-
-        self.fields['short_intro'].widget.attrs.update(
-            {'type': 'text', 'name': 'short_intro', 'class': 'form-control', 'placeholder': 'bio'})
-
-        self.fields['location'].widget.attrs.update(
-            {'type': 'text', 'name': 'location', 'class': 'form-control', 'placeholder': 'location'})
+    # def __init__(self, *args, **kwargs):
+    #     super(ProfileForm, self).__init__(*args, **kwargs)
+    #
+    #     self.fields['first_name'].widget.attrs.update(
+    #         {'type': 'text', 'name': 'first_name', 'class': 'form-control', 'placeholder': 'first name'})
+    #
+    #     self.fields['last_name'].widget.attrs.update(
+    #         {'type': 'text', 'name': 'last_name', 'class': 'form-control', 'placeholder': 'surname'})
+    #
+    #     self.fields['username'].widget.attrs.update(
+    #         {'type': 'text', 'name': 'username', 'class': 'form-control', 'placeholder': 'username'})
+    #
+    #     self.fields['short_intro'].widget.attrs.update(
+    #         {'type': 'text', 'name': 'short_intro', 'class': 'form-control', 'placeholder': 'bio'})
+    #
+    #     self.fields['location'].widget.attrs.update(
+    #         {'type': 'text', 'name': 'location', 'class': 'form-control', 'placeholder': 'location'})

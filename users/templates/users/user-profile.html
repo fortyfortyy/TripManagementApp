@@ -15,11 +15,11 @@
 }
 
 .image img {
-    transition: all 0.5s
+    transition: all 1s
 }
 
 .card:hover .image img {
-    transform: scale(1.5)
+    transform: scale(1.2)
 }
 
 
@@ -82,13 +82,19 @@ hr .new1 {
     font-weight: bold
 }
 
+.location {
+    font-size:14px;
+    color: white;
+    font-weight: bold
+}
+
 .date {
     background-color: #ccc
 }
     </style>
     <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
         <div class="card p-4">
-            <div class=" image d-flex flex-column justify-content-center align-items-center"> <button class="btn"> <img src="{{ profile.image.url }}" height="100" width="100" /></button>
+            <div class=" image d-flex flex-column justify-content-center align-items-center"> <button class="btn"> <img class="img-fluid img-thumbnail" src="{{ profile.profile_image.url }}"/></button>
                 {% if profile.get_full_name %}
                     <span class="name mt-3">{{ profile.get_full_name }}</span>
                 {% else %}
@@ -98,7 +104,7 @@ hr .new1 {
                 {% if request.user.pk == profile.pk %}
                 <div class="d-flex flex-row justify-content-center align-items-center gap-2"> <span class="email">{{ profile.email }}</span> <span><i class="fa fa-copy"></i></span> </div>
                 {% endif %}
-                <div class="d-flex flex-row justify-content-center align-items-center mt-3"> <span class="number">1069 <span class="follow">Followers</span></span> </div>
+{#                <div class="d-flex flex-row justify-content-center align-items-center mt-3"> <span class="number">1069 <span class="follow">Followers</span></span> </div>#}
                 {% if request.user.pk == profile.pk %}
                     <div class=" d-flex mt-2">
                         <form action="{% url 'user-profile' profile.pk %}" method="get">
@@ -107,11 +113,17 @@ hr .new1 {
                         </form>
                     </div>
                 {% endif %}
-                {% if profile.short_intro %}
-                    <div class="text mt-3"> <span>{{ profile.short_intro }}.<br><br> Artist/ Creative Director by Day #NFT minting@ with FND night. </span> </div>
-                {% endif %}
+                    <div class="text mt-3">
+                        {% if profile.short_intro %}
+                            <span>{{ profile.short_intro }}.<br></span>
+                        {% endif %}
+                    </div>
+{#                <div class="d-flex flex-row justify-content-start align-items-start mt-2"> <span>{{ profile.location }}</span> </div>#}
                 <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center"> <span><i class="fa fa-twitter"></i></span> <span><i class="fa fa-facebook-f"></i></span> <span><i class="fa fa-instagram"></i></span> <span><i class="fa fa-linkedin"></i></span> </div>
-                <div class=" px-2 rounded mt-4 date "> <span class="join">Joined {{ profile.date_joined|date }}</span> </div>
+                <div class="d-flex flex-row justify-content-between">
+                    <span class="px-2 rounded mt-4 date join ">Joined {{ profile.date_joined|date }}</span>
+                    <span class="px-3 rounded mt-4 date join">Location: {{ profile.location }}</span>
+                </div>
             </div>
         </div>
     </div>
