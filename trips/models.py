@@ -102,6 +102,10 @@ class TripPlanGroup(models.Model):
 
 
 class Country(models.Model):
+    class Meta:
+        verbose_name = _('country')
+        verbose_name_plural = _('countries')
+
     country = models.CharField(_('country'), max_length=50, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
@@ -112,6 +116,10 @@ class Country(models.Model):
 
 
 class City(models.Model):
+    class Meta:
+        verbose_name = _('city')
+        verbose_name_plural = _('cities')
+
     city = models.CharField(_('city'), max_length=50, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
@@ -122,6 +130,10 @@ class City(models.Model):
 
 
 class Tag(models.Model):
+    class Meta:
+        verbose_name = _('tag')
+        verbose_name_plural = _('tags')
+
     tag = models.CharField(_('tag name'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
@@ -132,6 +144,10 @@ class Tag(models.Model):
 
 
 class Description(models.Model):
+    class Meta:
+        verbose_name = _('description')
+        verbose_name_plural = _('descriptions')
+
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
     content = models.TextField(_('description'), null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
