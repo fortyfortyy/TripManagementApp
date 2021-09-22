@@ -11,8 +11,13 @@
                         <input type="submit" value="Confirm">
                     {% else %}
                         <p> Are you sure you want to delete {{ trip_plan.name }}? </p>
-                        <a href="{% url 'trip-plan-details' trip.plan.pk %}">Go back</a>
-                        <input type="submit" value="Confirm">
+                        <a href="{% url 'trip-plan-details' trip_plan.pk %}">Go back</a>
+                        <form method="post">
+                            {% csrf_token %}
+                            <a href="{% url 'delete-trip-plan' trip_plan.pk %}">
+                                <button class="btn btn-danger" type="submit">Delete Trip Plan</button>
+                            </a>
+                        </form>
                     {% endif %}
                 </form>
             </div>

@@ -54,7 +54,8 @@ class TripPlan(models.Model):
         countries = []
         for trip in trips:
             for country_obj in trip.countries.all():
-                countries.append(country_obj.country)
+                if country_obj.country not in countries:
+                    countries.append(country_obj.country)
         return countries
 
     @property
@@ -63,13 +64,14 @@ class TripPlan(models.Model):
         cities = []
         for trip in trips:
             for city_obj in trip.cities.all():
-                cities.append(city_obj.city)
+                if city_obj.city not in cities:
+                    cities.append(city_obj.city)
         return cities
 
 
 class Trip(models.Model):
     plan = models.ForeignKey(TripPlan, on_delete=models.CASCADE)
-
+    short_description = models.CharField(_('short_description'), null=True, blank=True, max_length=64)
     # creates a thumbnail resized to maximum size to fit a 100x75 area
     trip_images = models.ImageField(
         max_length=255, blank=True, null=True, upload_to=get_trip_image_filepath, default="")
@@ -78,6 +80,9 @@ class Trip(models.Model):
 
     created = models.DateField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    # def __str__(self):
+    #     return self.short_description
 
     @property
     def descriptions(self):
@@ -106,7 +111,7 @@ class Country(models.Model):
         verbose_name = _('country')
         verbose_name_plural = _('countries')
 
-    country = models.CharField(_('country'), max_length=50, blank=True)
+    country = models.CharField(_('country'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False)
@@ -120,7 +125,7 @@ class City(models.Model):
         verbose_name = _('city')
         verbose_name_plural = _('cities')
 
-    city = models.CharField(_('city'), max_length=50, blank=True)
+    city = models.CharField(_('city'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False)
@@ -134,7 +139,7 @@ class Tag(models.Model):
         verbose_name = _('tag')
         verbose_name_plural = _('tags')
 
-    tag = models.CharField(_('tag name'), max_length=30, blank=True)
+    tag = models.CharField(_('tag name'), max_length=20, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)

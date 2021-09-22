@@ -6,23 +6,13 @@ from django.utils.translation import ugettext_lazy as _
 from .models import TripPlan, Trip
 
 
-class TripPlanCreateForm(forms.ModelForm):
+class TripPlanCreateEditForm(forms.ModelForm):
     class Meta:
         model = TripPlan
-        fields = ('name', 'is_private')
-
         # TODO w jaki sposób dodać też tagi do tego formularza jeśli ma ManyToMany field?
-        # fields = ('name', 'is_private', 'tags')
+        fields = ('name', 'tags', 'is_private')
 
-    # https://sayari3.com/articles/16-how-to-pass-user-object-to-django-form/
-    # def __init__(self, *args, **kwargs):
-    #     # breakpoint()
-    #     self.request = kwargs.pop("request")  # store value of request
-    #     super().__init__(*args, **kwargs)
-    #
-    # def clean(self):
-    #     print(self.request.user)  # request now available here also
-    #     return self.request.user
+    tags = forms.CharField(max_length=30, widget=forms.TextInput(attrs={'name': 'tags'}))
 
 
 class TripCreateForm(forms.Form):
@@ -30,7 +20,7 @@ class TripCreateForm(forms.Form):
     city = forms.CharField(label='City', max_length=50)
     day_from = forms.DateField(label='Date From', widget=forms.DateInput(attrs={'type': 'date'}))
     day_to = forms.DateField(label='Date To', widget=forms.DateInput(attrs={'type': 'date'}))
-    description = forms.CharField(widget=forms.TextInput(attrs={'size': '40'}))
+    short_description = forms.CharField(widget=forms.TextInput(attrs={'size': '40'}))
 
     # class Meta:
     #     model = Trip
@@ -69,10 +59,24 @@ class TripCreateForm(forms.Form):
                                   code='trip_exists_error')
         return name
 
-
-# TODO edycja pojedynczego tripa za pomocą formset'ów
+#
 # class TripEditForm(ModelForm):
-#     pass
-    # class Meta:
-    #     model = Trip
-        # fields = ('countries', 'cities', 'descriptions', 'date_range')
+#     class Meta:
+#         model = Trip
+#         # fields = ('countries', 'cities', 'descriptions', 'date_range', 'trip_images')
+#         fields = '__all__'
+
+    # def __init__(self, *args, **kwargs):
+    #     super(TripEditForm, self).__init__(*args, **kwargs)
+    #
+    #     self.fields['countries'].widget.attrs.update(
+    #         {'type': 'text', 'placeholder': 'country'})
+    #
+    #     self.fields['cities'].widget.attrs.update(
+    #         {'type': 'date'})
+    #
+    #     self.fields['descriptions'].widget.attrs.update(
+    #         {'type': 'date', 'placeholder': 'description'})
+    #
+    #     self.fields['date_range'].widget.attrs.update(
+    #         {'type': 'date', 'name': 'day_to', 'class': 'form-control'})
