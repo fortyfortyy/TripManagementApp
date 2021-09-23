@@ -30,11 +30,6 @@ class TripPlan(models.Model):
     def __str__(self):
         return self.name
 
-    # @property
-    # def trips(self):
-    #     trips = self.trip_set.all()
-    #     return trips
-
     @property
     def dates(self):
         trips = Trip.objects.filter(plan=self.id)
@@ -81,25 +76,25 @@ class Trip(models.Model):
     created = models.DateField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True, editable=False)
 
-    # def __str__(self):
-    #     return self.short_description
+    def __str__(self):
+        return self.short_description
 
     @property
     def descriptions(self):
-        queryset = self.description_set.all().values_list('content', flat=True)
-        # queryset = self.description_set.all().values_list('content')
-        return queryset
+        # TODO Shift + F6 zmienić descriptions na activity
+        activities = self.description_set.all().values_list('content', flat=True)
+        return activities
 
     @property
     def date_range(self):
-        days = self.days_set.all().values_list('day_from', 'day_to')
-        for day in days:
-            return day
+        queryset = self.days_set.all().values_list('day_from', 'day_to')
+        for days in queryset:
+            return days
 
 
 class TripPlanGroup(models.Model):
     """
-    Możliwość dodawania uprawnień dla osób dodanych do wycieczki
+    TODO in the future
     """
     trip_plan = models.OneToOneField(TripPlan, on_delete=models.CASCADE)
     profiles = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -107,57 +102,58 @@ class TripPlanGroup(models.Model):
 
 
 class Country(models.Model):
-    class Meta:
-        verbose_name = _('country')
-        verbose_name_plural = _('countries')
-
     country = models.CharField(_('country'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    class Meta:
+        verbose_name = _('country')
+        verbose_name_plural = _('countries')
 
     def __str__(self):
         return self.country
 
 
 class City(models.Model):
-    class Meta:
-        verbose_name = _('city')
-        verbose_name_plural = _('cities')
-
     city = models.CharField(_('city'), max_length=30, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    class Meta:
+        verbose_name = _('city')
+        verbose_name_plural = _('cities')
 
     def __str__(self):
         return self.city
 
 
 class Tag(models.Model):
-    class Meta:
-        verbose_name = _('tag')
-        verbose_name_plural = _('tags')
-
     tag = models.CharField(_('tag name'), max_length=20, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)
+
+    class Meta:
+        verbose_name = _('tag')
+        verbose_name_plural = _('tags')
 
     def __str__(self):
         return self.tag
 
 
 class Description(models.Model):
-    class Meta:
-        verbose_name = _('description')
-        verbose_name_plural = _('descriptions')
-
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    content = models.TextField(_('description'), null=True, blank=True)
+    content = models.TextField(_('what would you like to do?'), null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(
         default=uuid.uuid4, unique=True, primary_key=True, editable=False)
+
+    class Meta:
+        verbose_name = _('description')
+        verbose_name_plural = _('descriptions')
+        ordering = ('content',)
 
     def __str__(self):
         return self.content

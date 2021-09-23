@@ -1,96 +1,65 @@
 {% extends 'base.html' %}
 {% block content %}
     <style>
-    * {
-    margin: 0;
-    padding: 0
-}
+        * {
+            margin: 0;
+            padding: 0
+        }
 
-.card {
-    width: 350px;
-    background-color: #efefef;
-    border: none;
-    cursor: pointer;
-    transition: all 0.5s
-}
+        .card {
+            width: 350px;
+            background-color: #efefef;
+            border: none;
+            cursor: pointer;
+            transition: all 0.5s
+        }
 
-.image img {
-    transition: all 1s
-}
+        .image img {
+            transition: all 1s
+        }
 
-.card:hover .image img {
-    transform: scale(1.2)
-}
+        .card:hover .image img {
+            transform: scale(1.2)
+        }
 
 
-.name {
-    font-size: 22px;
-    font-weight: bold
-}
+        .name {
+            font-size: 22px;
+            font-weight: bold
+        }
 
-.idd {
-    font-size: 14px;
-    font-weight: 600
-}
+        .idd {
+            font-size: 14px;
+            font-weight: 600
+        }
 
-.email {
-    font-size: 14px
-}
+        .email {
+            font-size: 14px
+        }
 
-.number {
-    font-size: 22px;
-    font-weight: bold
-}
+        .text span {
+            font-size: 13px;
+            color: #545454;
+            font-weight: 500
+        }
 
-.follow {
-    font-size: 12px;
-    font-weight: 500;
-    color: #444444
-}
+        .icons i {
+            font-size: 19px
+        }
 
-.btn1 {
-    height: 40px;
-    width: 150px;
-    border: none;
-    background-color: #3C70A1;
-    color: white;
-    font-size: 15px
-}
+        hr .new1 {
+            border: 1px solid
+        }
 
-.btn1-a {
-    color: #3C70A1;
-    background-color: white;
-}
+        .join {
+            font-size: 14px;
+            color: #a0a0a0;
+            font-weight: bold
+        }
 
-.text span {
-    font-size: 13px;
-    color: #545454;
-    font-weight: 500
-}
-
-.icons i {
-    font-size: 19px
-}
-
-hr .new1 {
-    border: 1px solid
-}
-
-.join {
-    font-size: 14px;
-    color: #a0a0a0;
-    font-weight: bold
-}
-
-.location {
-    font-size:14px;
-    color: white;
-    font-weight: bold
-}
-
-.date {
-    background-color: #ccc
-}
+        .date {
+            background-color: #ccc
+        }
     </style>
     <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
         <div class="card p-4">

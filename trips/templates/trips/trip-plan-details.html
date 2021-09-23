@@ -1,13 +1,13 @@
-{% extends 'base.html' %}\
+{% extends 'base.html' %}
 {% block content %}
     {% if trip_plan.owner == request.user %}
         <section class="pb-5 header text-center">
             <div class="container py-5 text-white">
                  <header class="py-1">
-                    <h1 class="display-4 text-white">{{ trip_plan.name }}</h1>
+                    <h1 class="display-4 text-white"><i>{{ trip_plan.name }}</i></h1>
                      {% if edit == True %}
                         <a href="{% url 'edit-trip-plan' trip_plan.pk %} ">
-                            <button style="background-color: white" class="btn btn-primary text-dark" type="button">Edit Plan Trip</button>
+                            <button class="btn btn-edit" type="button">Edit Plan Trip</button>
                         </a>
                     {% endif %}
                 </header>
@@ -29,58 +29,87 @@
                     </div>
 
                     <div class="text-lg-end">
-                        {% if edit != True %}
-                             <form method="get" action="{% url 'trip-plan-details' trip_plan.pk %}">
-                                 {% csrf_token %}
-                                 <input type="submit" value="Edit" name="edit">
-                             </form>
-                        {% endif %}
-                        <form method="get" action="{% url 'delete-trip-plan' trip_plan.pk %}">
-                            {% csrf_token %}
-                            <input type="submit" value="Delete Trip Plan">
-                        </form>
-                        <form method="get" action="{% url 'create-trip' trip_plan.pk %}">
-                            {% csrf_token %}
-                            <input type="submit" value="Add Trip">
-                        </form>
+                        <a href="{% url 'delete-trip-plan' trip_plan.pk %}">
+                            <button class="btn btn-danger" type="submit">Delete Plan</button>
+                        </a>
+                        <a href="{% url 'create-trip' trip_plan.pk %}">
+                            <button class="btn btn-edit" type="submit">Add Trip</button>
+                        </a>
                     </div>
                 </div>
             </div>
 
             <div class="container text-white">
-                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
-                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
-                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
+                {% if trip_plan.dates|first %}
+                    <p>from <u>{{ trip_plan.dates|first }}</u> to <u>{{trip_plan.dates|last}}</u></p>
+                {% endif %}
+                {% if trip_plan.countries %}
+                    <p> {% if trip_plan.countries|length > 1 %}Countries:{% else %}Country:{% endif %}
+                        {% for country in trip_plan.countries %}
+                            {% if country == trip_plan.countries|last %}
+                                {{ country }}
+                            {% else %}
+                                {{ country }},
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+                {% if trip_plan.cities %}
+                    <p> {% if trip_plan.cities|length > 1 %}Cities:{% else %}City:{% endif %}
+                        {% for city in trip_plan.cities %}
+                            {% if city == trip_plan.cities|last %}
+                                {{ city }}
+                            {% else %}
+                                {{ city }},
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
             </div>
-    {#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
-    {#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
-            {% for trip in trips %}
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Dates: {{trip.date_range|first}} - {{ trip.date_range|last }}</h5>
-{#                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>#}
-                                <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
-                                <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
-                                <p class="card-text">Description:
-                                   {% for description in trip.descriptions %}
-                                       <small>{{ description }}</small>
-                                   {% endfor %}
-                                </p>
-                                {% if edit == True %}
-                                    <a href="{% url 'edit-trip' trip.pk %} ">
-                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Edit Trip</button>
-                                    </a>
-                                    <a href="{% url 'delete-trip' trip.pk %} ">
-                                        <button style="background-color: #3C70A1" class="btn btn-primary" type="button">Delete Trip</button>
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
+
+            <div class="container">
+                <div class="row justify-content-center mt-5 mb-5">
+                    <div class="card">
+                        <div style="color: #034A70" class="display-6 m-1">My trips</div>
                     </div>
                 </div>
-            {% endfor %}
+                <div class="row justify-content-between row-cols-2">
+                    {% for trip in trips %}
+                        <div class="col-md-4">
+                            <div class="card m-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{trip.date_range|first}} - {{ trip.date_range|last }}</h5>
+                                    <p class="card-text">{% if trip.countries.all|length > 1 %}Countries:{% else %}Country:{% endif %}
+                                    {% for country in trip.countries.all %}
+                                        {% if country == trip.countries.all|last %}
+                                            {{ country }}
+                                        {% else %}
+                                            {{ country }},
+                                        {% endif %}
+                                    {% endfor %}
+                                    <p class="card-text">
+                                        {% if trip.cities.all|length > 1 %}Cities:{% else %}City:{% endif %}
+                                        {% for city in trip.cities.all %}
+                                            {% if city == trip.cities.all|last %}
+                                                {{ city }}
+                                            {% else %}
+                                                {{ city }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if trip.short_description %}
+                                        <p class="card-text">{{ trip.short_description }}
+                                    {% endif %}
+                                    </p>
+                                    <a href="{% url 'trip-details' trip.pk %}">
+                                      <button class="btn btn-trip-login-logout m-1" name='details' value="details" type="submit">View details</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </section>
     {% else %}
         <section class="pb-5 header text-center">
@@ -97,29 +126,77 @@
                             {% endfor %}
                          </span>
                     </div>
-                </div>
-            </div>
-            <div class="container text-white">
-                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
-                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
-                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
-            </div>
-    {#    !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#}
-    {#    # TODO zrobić szczegóły widoku wycieczki na dany dzień itp #}
-            {% for trip in trips %}
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Dates: {% for dates in trip.date_range %}{{ dates }} - {% endfor %}</h5>
-                                <p class="card-text">City: {% for city in trip.cities.all %}{{ city }}, {% endfor %}</p>
-                                <p class="card-text">Country: {% for country in trip.countries.all %}{{ country }}, {% endfor %}</p>
-                                <p class="card-text">Description: {% for description in trip.descriptions %}{{ description }}{% endfor %}</p>
-                            </div>
-                        </div>
+                    <div class="text-lg-center">
+                        <span class="tag tag--pill tag--sub tag--lg">
+                            <small># Small friends images in group </small>
+                        </span>
                     </div>
                 </div>
-            {% endfor %}
+            </div>
+
+            <div class="container text-white">
+                {% if trip_plan.dates|first %}
+                    <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
+                {% endif %}
+                {% if trip_plan.countries %}
+                    <p> {% if trip_plan.countries|length > 1 %}Countries:{% else %}Country:{% endif %}
+                        {% for country in trip_plan.countries %}
+                            {% if country == trip_plan.countries|last %}
+                                {{ country }}
+                            {% else %}
+                                {{ country }},
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+                {% if trip_plan.cities %}
+                    <p> {% if trip_plan.cities|length > 1 %}Cities:{% else %}City:{% endif %}
+                        {% for city in trip_plan.cities %}
+                            {% if city == trip_plan.cities|last %}
+                                {{ city }}
+                            {% else %}
+                                {{ city }},
+                            {% endif %}
+                        {% endfor %}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div class="container">
+                <div class="row justify-content-between row-cols-1">
+                    {% for trip in trips %}
+                        <div class="col-md-4">
+                            <div class="card m-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Dates: {{trip.date_range|first}} - {{ trip.date_range|last }}</h5>
+                                    <p class="card-text">{% if trip.countries.all|length > 1 %}Countries:{% else %}Country:{% endif %}
+                                    {% for country in trip.countries.all %}
+                                        {% if country == trip.countries.all|last %}
+                                            {{ country }}
+                                        {% else %}
+                                            {{ country }},
+                                        {% endif %}
+                                    {% endfor %}
+                                    <p class="card-text">
+                                        {% if trip.cities.all|length > 1 %}Cities:{% else %}City:{% endif %}
+                                        {% for city in trip.cities.all %}
+                                            {% if city == trip.cities.all|last %}
+                                                {{ city }}
+                                            {% else %}
+                                                {{ city }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    {% if trip.short_description %}
+                                        <p class="card-text">Description: {{ trip.short_description }}
+                                    {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </section>
     {% endif %}
 {% endblock %}

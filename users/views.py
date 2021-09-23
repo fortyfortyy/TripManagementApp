@@ -9,7 +9,10 @@ from users.models import Profile
 
 
 class UserView(LoginRequiredMixin, View):
-    login_url = 'login'
+    """
+    Show the user account page.
+    """
+    login_url = 'accounts/login/'
     form_class = ProfileForm
     form_class_template = 'users/user-profile-form.html'
     template_class = 'users/user-profile.html'
@@ -41,6 +44,9 @@ class UserView(LoginRequiredMixin, View):
 
 
 class RegisterView(View):
+    """
+    Create the user account and also log in.
+    """
     form_class = CustomUserCreationForm
     template_class = 'users/register.html'
     context = {}
@@ -53,15 +59,12 @@ class RegisterView(View):
         return render(request, self.template_class, self.context)
 
     def post(self, request, *args, **kwargs):
-        """
-        Create the user account and also log in
-        """
         form = self.form_class(request.POST)
         if form.is_valid():
             user = form.save()
             messages.success(request, 'User account was created!')
 
-            # login(request, user)
+            login(request, user)
             return redirect('trip-plans')
 
         self.context['registration_form'] = form
@@ -69,13 +72,17 @@ class RegisterView(View):
 
 
 class LoginView(View):
+    """
+    Displays the login form and handles the login action.
+    Then redirects to the trip plans page.
+    """
     form_class = LoginForm
     template_class = 'users/login.html'
     context = {}
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            messages.error(request, "Sorry you're already logged in!")
+            messages.error(request, "Sorry you're already logged-in!")
             return redirect('trip-plans')
 
         self.context['form'] = self.form_class
@@ -95,10 +102,12 @@ class LoginView(View):
         return render(request, self.template_class, self.context)
 
 
-class LogoutView(LoginRequiredMixin, View):
-    login_url = 'login'
-
+class LogoutView(View):
+    """
+    Logs out the user and displays 'You are logged out' message.
+    Then redirects to the log-in page.
+    """
     def get(self, request, *args, **kwargs):
         logout(request)
-        messages.info(request, 'User was logged out!')
+        messages.info(request, 'You are logged out!')
         return redirect('trip-plans')

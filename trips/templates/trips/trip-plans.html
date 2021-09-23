@@ -2,33 +2,51 @@
 {% block content %}
     <div class="container">
         <div class="row justify-content-md-center">
-            <div class="col-6 col-lg-4">
+            <div class="col-6 col-lg-4 m-5">
                 <form method="get" class="search-bar justify-content-start">
-                    {% csrf_token %}
                     <input type="text" class="form-control" name="search_query" id="id_q_large" placeholder="Search by name, country, city, tag">
                     <label class="form-label" for="id_q_large"></label>
                 </form>
-
             </div>
         </div>
     </div>
     <div class="container">
-        <div class="grid grid--three">
+        <div class="row justify-content-evenly mt-5">
             {% for trip_plan in trip_plans %}
-                <div class="col-sm-3">
-                    <div class="card">
+                <div class="col-sm-4">
+                    <div class="card py-3 m-3 bg-light">
                         <div class="card-body">
-                            <div class="container">
-                            <div class="card-title"><h2>{{ trip_plan.name }}</h2></div>
-                                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{trip_plan.dates|last}}</u></p>
-                                <p>Countries: {% for country in trip_plan.countries %}{{ country }} {% endfor %}</p>
-                                <p>Cities: {% for city in trip_plan.cities %}{{ city }} {% endfor %}</p>
+                            <div class="row">
+                                <div class="card-title"><h2>{{ trip_plan.name }}</h2></div>
+                                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{ trip_plan.dates|last }}</u></p>
+                                <p>{% if trip_plan.countries|length > 1 %}Countries:{% else %}Country:{% endif %}
+                                    {% for country in trip_plan.countries %}
+                                        {% if country == trip_plan.countries|last %}
+                                            {{ country }}
+                                        {% else %}
+                                            {{ country }},
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <p>{% if trip_plan.cities|length > 1 %}Cities:{% else %}City:{% endif %}
+                                    {% for city in trip_plan.cities %}
+                                        {% if city == trip_plan.cities|last %}
+                                            {{ city }}
+                                        {% else %}
+                                            {{ city }},
+                                        {% endif %}
+                                    {% endfor %}
+                                </p>
                                 <p>Created by: {{ trip_plan.owner }}</p>
                                 <p>{% for tag in trip_plan.tags.all %}{{ tag }} {% endfor %}</p>
                             </div>
-                            <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
-                                <button style="background-color: #3C70A1" class="btn btn-primary" type="button">More Details</button>
-                            </a>
+                            <div class="row mt-1">
+                                <div class="col-md-6 offset-md-3">
+                                    <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
+                                        <button class="btn btn-trip-login-logout" type="button">More Details</button>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

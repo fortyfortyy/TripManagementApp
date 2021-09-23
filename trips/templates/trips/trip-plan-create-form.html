@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+            <div class="row">
+                <div class="card p-4">
+                    <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row m-5">
+                                <div class="col-md-12">
+                                    <label class="labels" for="id_name">Name of the Plan</label>
+                                    <input type="text" class="form-control" placeholder="Best Holidays" id="id_name" name='name' value=" {{ form.name.value|default_if_none:'' }}">
+                                </div>
+                                <div class="col-md-4">
+                                    {% for tag in form.tags %}
+                                        <label class="labels" for="id_tag">Tag</label>
+                                        <input type="text" id="id_tag" class="form-control" placeholder="#bestholidays" name='tags' value="{{ form.tags.value.0|default_if_none:'' }}">
+                                    {% endfor %}
+                                </div>
+                                <div class="form-check form-switch m-2">
+                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name='is_private' checked>
+                                    <label class="form-check-label" for="flexSwitchCheckChecked">Is private?</label>
+                                </div>
+                            </div>
+                            {% if update == True %}
+                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Update the Plan Trip</button></div>
+                            {% else %}
+                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Add the new Plan Trip</button></div>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

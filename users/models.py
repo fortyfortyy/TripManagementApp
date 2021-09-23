@@ -1,5 +1,4 @@
 from django.contrib.auth.models import BaseUserManager, AbstractUser
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -7,8 +6,14 @@ import uuid
 
 
 class MyAccountManager(BaseUserManager):
-
+    """
+    Custom user model manager where email is the unique identifiers
+    for authentication instead of usernames.
+    """
     def create_user(self, email, username, password=None):
+        """
+        Create and save a User with the given email and password and username.
+        """
         if not email:
             raise ValueError("User must have an email address.")
         if not username:
@@ -37,12 +42,12 @@ class MyAccountManager(BaseUserManager):
         return user
 
 
-# poniżej jest do media_cdn (tworzy z automatu folder profile_images
+# sends to media_cdn
 def get_profile_image_filepath(self, filename):
     return f'profile_images/{self.pk}/profile_image.png'
 
 
-# poniżej jest do static_cdn
+# save to the static
 def get_default_profile_image():
     return 'images/profile_images/user-default.png'
 

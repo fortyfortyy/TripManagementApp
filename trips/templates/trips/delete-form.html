@@ -1,25 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="container">
-        <div class="card text-center" style="width: 18rem;">
-            <div class="card-body ">
-                <form method="post">
-                    {% csrf_token %}
-                    {% if trip %}
-                        <p> Are you sure you want to delete trip in {% for country in trip.countries.all %}{{ country }}{% endfor %}?</p>
-                        <a href="{% url 'trip-plan-details' trip.plan.pk %}">Go back</a>
-                        <input type="submit" value="Confirm">
-                    {% else %}
-                        <p> Are you sure you want to delete {{ trip_plan.name }}? </p>
-                        <a href="{% url 'trip-plan-details' trip_plan.pk %}">Go back</a>
-                        <form method="post">
-                            {% csrf_token %}
-                            <a href="{% url 'delete-trip-plan' trip_plan.pk %}">
-                                <button class="btn btn-danger" type="submit">Delete Trip Plan</button>
-                            </a>
-                        </form>
-                    {% endif %}
-                </form>
+        <div class="row col-md-6 offset-md-3">
+            <div class="card text-center" style="width: 20rem;">
+                <div class="card-body ">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if trip %}
+                            Are you sure you want to delete trip <h5><i>{{ trip.short_description }}</i></h5>
+                            <a href="{% url 'trip-plan-details' trip.plan.pk %}">Go back</a>
+                            <input class="btn btn-trip-login-logout m-1" type="submit" value="Confirm">
+                        {% else %}
+                            <p> Are you sure you want to delete {{ trip_plan.name }}? </p>
+                            <a href="{% url 'trip-plan-details' trip_plan.pk %}">Go back</a>
+                            <input class="btn btn-trip-login-logout m-1" type="submit" value="Confirm">
+                        {% endif %}
+                    </form>
+                </div>
             </div>
         </div>
     </div>

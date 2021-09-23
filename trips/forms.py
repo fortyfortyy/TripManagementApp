@@ -1,9 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm
+from django.forms import ModelForm, modelformset_factory
 from django.utils.translation import ugettext_lazy as _
 
-from .models import TripPlan, Trip
+from .models import TripPlan, Trip, Description
 
 
 class TripPlanCreateEditForm(forms.ModelForm):
@@ -59,24 +59,19 @@ class TripCreateForm(forms.Form):
                                   code='trip_exists_error')
         return name
 
-#
-# class TripEditForm(ModelForm):
-#     class Meta:
-#         model = Trip
-#         # fields = ('countries', 'cities', 'descriptions', 'date_range', 'trip_images')
-#         fields = '__all__'
 
-    # def __init__(self, *args, **kwargs):
-    #     super(TripEditForm, self).__init__(*args, **kwargs)
-    #
-    #     self.fields['countries'].widget.attrs.update(
-    #         {'type': 'text', 'placeholder': 'country'})
-    #
-    #     self.fields['cities'].widget.attrs.update(
-    #         {'type': 'date'})
-    #
-    #     self.fields['descriptions'].widget.attrs.update(
-    #         {'type': 'date', 'placeholder': 'description'})
-    #
-    #     self.fields['date_range'].widget.attrs.update(
-    #         {'type': 'date', 'name': 'day_to', 'class': 'form-control'})
+class TripDescriptionForm(forms.ModelForm):
+    class Meta:
+        model = Description
+        fields = ('trip', 'content',)
+        widgets = {
+            'trip': forms.HiddenInput(),
+            'content': forms.TextInput(attrs={
+                'type': 'text',
+                'class': 'form-control',
+                'placeholder': 'visit a museum...'
+            }),
+        }
+
+
+DescriptionFormSet = modelformset_factory(Description, form=TripDescriptionForm, extra=1, can_delete=True)   # edit description

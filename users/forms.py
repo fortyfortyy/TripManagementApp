@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
@@ -8,8 +7,6 @@ from users.models import Profile
 
 
 class CustomUserCreationForm(UserCreationForm):
-    # email = forms.EmailField(max_length=60)
-
     class Meta:
         model = Profile
         fields = ('username', 'email', 'password1', 'password2')
