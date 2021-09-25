@@ -16,7 +16,6 @@
 
     <body>
         {% include 'snippets/base_css.html' %}
-        {% include 'snippets/base_js.html' %}
         {% include 'snippets/navbar.html' %}
 
         {% if messages %}
@@ -34,7 +33,7 @@
         {% endif %}
 
         <!-- Body -->
-        <style type="text/css">
+        <style>
             .main{
                 min-height: 100vh;
                 height: 100%;
@@ -52,7 +51,6 @@
         <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
         <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
-{#        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">#}
         <script>
             {% block js %}
 

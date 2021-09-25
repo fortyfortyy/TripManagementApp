@@ -1,10 +1,10 @@
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
 
-from users.forms import CustomUserCreationForm, LoginForm, ProfileForm
+from users.forms import CustomUserCreationForm, ProfileForm, LoginForm
 from users.models import Profile
 
 
@@ -102,11 +102,13 @@ class LoginView(View):
         return render(request, self.template_class, self.context)
 
 
-class LogoutView(View):
+class LogoutView(LoginRequiredMixin, View):
     """
     Logs out the user and displays 'You are logged out' message.
     Then redirects to the log-in page.
     """
+    login_url = 'login/'
+
     def get(self, request, *args, **kwargs):
         logout(request)
         messages.info(request, 'You are logged out!')

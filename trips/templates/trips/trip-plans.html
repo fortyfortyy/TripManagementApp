@@ -13,43 +13,45 @@
     <div class="container">
         <div class="row justify-content-evenly mt-5">
             {% for trip_plan in trip_plans %}
-                <div class="col-sm-4">
-                    <div class="card py-3 m-3 bg-light">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="card-title"><h2>{{ trip_plan.name }}</h2></div>
-                                <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{ trip_plan.dates|last }}</u></p>
-                                <p>{% if trip_plan.countries|length > 1 %}Countries:{% else %}Country:{% endif %}
-                                    {% for country in trip_plan.countries %}
-                                        {% if country == trip_plan.countries|last %}
-                                            {{ country }}
-                                        {% else %}
-                                            {{ country }},
-                                        {% endif %}
-                                    {% endfor %}
-                                </p>
-                                <p>{% if trip_plan.cities|length > 1 %}Cities:{% else %}City:{% endif %}
-                                    {% for city in trip_plan.cities %}
-                                        {% if city == trip_plan.cities|last %}
-                                            {{ city }}
-                                        {% else %}
-                                            {{ city }},
-                                        {% endif %}
-                                    {% endfor %}
-                                </p>
-                                <p>Created by: {{ trip_plan.owner }}</p>
-                                <p>{% for tag in trip_plan.tags.all %}{{ tag }} {% endfor %}</p>
-                            </div>
-                            <div class="row mt-1">
-                                <div class="col-md-6 offset-md-3">
-                                    <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
-                                        <button class="btn btn-trip-login-logout" type="button">More Details</button>
-                                    </a>
+                {% if trip_plan.is_private == False or trip_plan.owner == request.user %}
+                    <div class="col-sm-4">
+                        <div class="card py-3 m-3 bg-light">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="card-title"><h2>{{ trip_plan.name }}</h2></div>
+                                    <p>From: <u>{{ trip_plan.dates|first }}</u> To: <u>{{ trip_plan.dates|last }}</u></p>
+                                    <p>{% if trip_plan.countries|length > 1 %}Countries:{% else %}Country:{% endif %}
+                                        {% for country in trip_plan.countries %}
+                                            {% if country == trip_plan.countries|last %}
+                                                {{ country }}
+                                            {% else %}
+                                                {{ country }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    <p>{% if trip_plan.cities|length > 1 %}Cities:{% else %}City:{% endif %}
+                                        {% for city in trip_plan.cities %}
+                                            {% if city == trip_plan.cities|last %}
+                                                {{ city }}
+                                            {% else %}
+                                                {{ city }},
+                                            {% endif %}
+                                        {% endfor %}
+                                    </p>
+                                    <p>Created by: {{ trip_plan.owner }}</p>
+                                    <p>{% for tag in trip_plan.tags.all %}{{ tag }} {% endfor %}</p>
+                                </div>
+                                <div class="row mt-1">
+                                    <div class="col-md-6 offset-md-3">
+                                        <a href="{% url 'trip-plan-details' trip_plan.pk %} ">
+                                            <button class="btn btn-trip-login-logout" type="button">More Details</button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>

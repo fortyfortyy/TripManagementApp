@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-
-    <style type="text/css">
+    <style>
         .card-signin {
           width: 100%;
           max-width: 400px;
@@ -32,28 +31,17 @@
                 <div class="card-body">
                     <form class="form-signin" method="post">
                         {% csrf_token %}
-{#                        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>#}
-{##}
-{#                        <input type="text" name="username" id="inputUsername" class="form-control" placeholder="Username" required>#}
-{##}
-{#                        <input type="password" name="password1" id="inputPassword1" class="form-control" placeholder="Password" required>#}
-{##}
-{#                        <input type="password" name="password2" id="inputPassword2" class="form-control" placeholder="Confirm password" required>#}
-
                         {% for field in registration_form %}
-
                             {% for error in field.errors %}
                                 <p style="color: red" class="">{{ error }}</p>
                             {% endfor %}
-
                             {{ field }}
-
                         {% endfor %}
+
                         {% if registration_form.non_field_errors %}
                             <div style="color: red">
                                 <p>{{registration_form.non_field_errors}}</p>
                             </div>
-
                         {% endif %}
                         <button class="btn btn-trip-login-logout" type="submit">Register</button>
                     </form>
@@ -61,5 +49,4 @@
             </div>
         </div>
     </div>
-
 {% endblock %}

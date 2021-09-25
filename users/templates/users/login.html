@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <style type="text/css">
+    <style>
         .card-signin {
           width: 100%;
           max-width: 400px;
@@ -33,11 +33,11 @@
                         {% endfor %}
 
                         {% for field in login_form %}
-                            <p>
+                            <div>
                                 {% for error in field.errors %}
                                     <p style="color: red">{{ error }}</p>
                                 {% endfor %}
-                            </p>
+                            </div>
                         {% endfor %}
 
                         {% if login_form.non_field_errors %}

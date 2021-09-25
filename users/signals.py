@@ -6,7 +6,7 @@
 # from django.contrib.auth.models import User
 # from .models import Profile
 #
-# # TODO do email-a poniżej importy
+# # TODO in the future for the email (import)
 # from django.core.mail import send_mail
 # from django.conf import settings
 #
@@ -22,12 +22,12 @@
 #             email=user.email,
 #         )
 #
-#         # TODO poniżej kolejny future (tworzenia listy znajomych)
+#         # TODO in the future for creating friends list
 #         # FriendList.objects.create(
 #         #     user=user,
 #         # )
 #
-#         # TODO do wysyłania powitalnego email-a
+#         # TODO in the future to send the welcome email
 #         # subject = 'Welcome to Trip Management App'
 #         # message = 'We are glad you are here!'
 #         #

@@ -1,19 +1,20 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.views import View
 from django.views.generic import UpdateView
 
-from trips.forms import TripPlanCreateEditForm, TripCreateForm, DescriptionFormSet
-from trips.models import TripPlan, Trip, Tag
+from trips.forms import CityFormSet, CountryFormSet, DescriptionFormSet, TagFormSet, TripCreateForm, \
+                        TripPlanCreateEditForm
+from trips.models import Tag, Trip, TripPlan
 
 
 class TripPlansView(LoginRequiredMixin, View):
     """
     Either gets the TripPlans data or
     gets the TripPlans data from the given words from search.
-    Then, returns it on the main page.
+    Then, returns it to the main page.
     """
     login_url = 'accounts/login/'
     template_class = 'trips/trip-plans.html'
@@ -31,7 +32,6 @@ class TripPlansView(LoginRequiredMixin, View):
                 Q(tags__tag__icontains=search_query)
             ).distinct()
             self.context['trip_plans'] = trip_plans
-
         return render(request, self.template_class, self.context)
 
 
@@ -47,23 +47,34 @@ class TripPlanCreateView(LoginRequiredMixin, View):
     context = {}
 
     def get(self, request, *args, **kwargs):
+        """
+        Returns the forms for the tag/s and for the Trip Plan.
+        """
+        tag_formset = TagFormSet(queryset=Tag.objects.none(), prefix='tags')
+        self.context['tag_formset'] = tag_formset
         self.context['form'] = self.form_class()
         return render(request, self.template_class, self.context)
 
     def post(self, request, *args, **kwargs):
+        """
+        Checks whether the data is valid. Saves to tag/s to the Trip Plan given instance.
+        """
         form = self.form_class(request.POST)
-        if form.is_valid():
-            name, tag, is_private = form.cleaned_data.items()
-            trip_plan = TripPlan.objects.create(owner=request.user, name=name[1], is_private=is_private[1])
-            trip_plan.name = name[1]
-            trip_plan.is_private = is_private[1]
-            tag_obj, created = Tag.objects.get_or_create(tag=tag[1])
-            trip_plan.tags.add(tag_obj)
+        tag_formset = TagFormSet(request.POST, request.FILES, prefix='tags')
+        if form.is_valid() and tag_formset.is_valid():
+            trip_plan = form.save(commit=False)
+            trip_plan.owner = request.user
             trip_plan.save()
 
+            tags = tag_formset.save(commit=False)
+            for tag in tags:
+                trip_plan.tags.get_or_create(tag=tag)
+            tag_formset.save()
             messages.success(request, 'The new trip plan has been added!')
             return redirect('create-trip', trip_plan.pk)
 
+        messages.error(request, 'Ups, there was an error during sending.')
+        self.context['tag_formset'] = tag_formset
         self.context['form'] = form
         return render(request, self.template_class, self.context)
 
@@ -77,19 +88,21 @@ class TripPlanDetailsView(LoginRequiredMixin, View):
     context = {}
 
     def get(self, request, *args, **kwargs):
+        """
+        Returns more information about the Trip Plan of given pk.
+        """
         trip_plan = TripPlan.objects.get(pk=kwargs['pk'])
         trips = Trip.objects.filter(plan=trip_plan)
         self.context['trips'] = trips
         self.context['trip_plan'] = trip_plan
-
         return render(request, self.template_class, self.context)
 
 
 class TripPlanEditView(LoginRequiredMixin, View):
     """
-    Displays update form for the TripPlan.
+    Displays update form for the Trip Plan.
     Handles the data from the form and updates to database.
-    Then, redirect to the main page.
+    Then, redirects to the main page.
     """
     login_url = 'accounts/login/'
     template_class = 'trips/trip-plan-create-form.html'
@@ -98,48 +111,42 @@ class TripPlanEditView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """
-        Shows update form for the TripPlan.
+        Returns the forms that are based on previous data for the tag/s and for the Trip Plan.
         """
         trip_plan = TripPlan.objects.get(pk=kwargs['pk'])
+        tag_formset = TagFormSet(queryset=trip_plan.tags.all(),  prefix='tags')
+        self.context['tag_formset'] = tag_formset
         self.context['form'] = self.form_class(instance=trip_plan)
         self.context['update'] = True
         return render(request, self.template_class, self.context)
 
     def post(self, request, *args, **kwargs):
         """
-        Handles the data from the form, if there's no any error in form saves to database.
-        Then, redirect to the main page.
+        Handles the data the forms, if there's no any error, saves to database.
+        Then, redirects to the Trip Plan details page.
         """
         trip_plan = TripPlan.objects.get(pk=kwargs['pk'])
         form = self.form_class(request.POST, instance=trip_plan)
-        if form.is_valid():
-            trip_plan = form.save(commit=False)
-            # for tag in form.cleaned_data['tags']:
-            tag, created = Tag.objects.get_or_create(tag=form.cleaned_data['tags'])
-            trip_plan.tags.add(tag)
-            trip_plan.save()
-            # name, newtags, is_private = form.cleaned_data.items()
-            # trip_plan.name = name[1]
-            # trip_plan.is_private = is_private[1]
-            # breakpoint()
-            # # TODO w jaki sposob najlepiej usuwac stare tagi i aktualizować je nowymi wartoścami z formularza?
-            # # old_tag = Tag.objects.get(tags_)
-            # for tag in newtags:
-            #     tag, created = Tag.objects.get_or_create(tag=tag)
-            #     trip_plan.tags.add(tag)
+        tag_formset = TagFormSet(request.POST, request.FILES, prefix='tags')
+        if form.is_valid() and tag_formset.is_valid():
+            form.save()
+            tags = tag_formset.save(commit=False)
+            for tag in tags:
+                trip_plan.tags.get_or_create(tag=tag)
+            tag_formset.save()
+            messages.success(request, f"{trip_plan.name} has been updated!")
+            return redirect('trip-plan-details', trip_plan.pk)
 
-            messages.success(request, "Trip Plan has been updated!")
-            return redirect('trip-plans')
-
+        messages.error(request, 'Ups there was an error during sending.')
+        self.context['tag_formset'] = tag_formset
         self.context['form'] = form
-        messages.error(request, "Ups, something gone wrong")
         return render(request, self.template_class, self.context)
 
 
 class TripPlanDeleteView(LoginRequiredMixin, View):
     """
-    Deletes the Trip Plan instance from the database.
-    Then, redirect to the main page.
+    Deletes the Trip Plan object from the database.
+    Then, redirects to the main page.
     """
     login_url = 'accounts/login/'
     template_class = 'trips/delete-form.html'
@@ -159,7 +166,7 @@ class TripPlanDeleteView(LoginRequiredMixin, View):
 
 class TripCreateView(LoginRequiredMixin, View):
     """
-    Displays the trip create form and handles the data form the form.
+    Displays the create form for the Trip, then handles the data.
     """
     login_url = 'accounts/login/'
     template_class = 'trips/trip-create-form.html'
@@ -168,7 +175,7 @@ class TripCreateView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         """
-        Displays the trip form form the trip plan instance.
+        Displays the create form for based on the Trip Plan instance.
         """
         trip_plan = TripPlan.objects.get(pk=kwargs['pk'])
         form = self.form_class()
@@ -201,7 +208,7 @@ class TripCreateView(LoginRequiredMixin, View):
 
 class TripDetailsView(LoginRequiredMixin, View):
     """
-    Displays the extended details of the chosen trip.
+    Displays the extended details of the chosen Trip.
     """
     login_url = 'accounts/login/'
     template_class = 'trips/trip-details.html'
@@ -221,38 +228,75 @@ class TripDetailsView(LoginRequiredMixin, View):
 
 class TripEditView(LoginRequiredMixin, UpdateView):
     """
-    Edit the Trip based.
+    Displays update form for the Trip.
+    Handles the data from the form and updates to database.
+    Then, redirects to the Trip Details page.
     """
     login_url = 'accounts/login/'
     template_name = 'trips/trip-form.html'
-    # form_class = TripDescriptionForm
     model = Trip
     fields = '__all__'
 
     def get_context_data(self, **kwargs):
+        """
+        Returns formsets for city, country, description objects.
+        """
         context = super().get_context_data(**kwargs)
         trip_id = self.kwargs['pk']
         trip = Trip.objects.get(pk=trip_id)
-        # Below Edit Description
-        formset = DescriptionFormSet(queryset=trip.description_set.all(), initial=[{'trip': trip_id}])
-        context['formset'] = formset
+
+        # City Formset
+        city_formset = CityFormSet(queryset=trip.cities.all(),  prefix='cities')
+        context['city_formset'] = city_formset
+
+        # Country Formset
+        country_formset = CountryFormSet(queryset=trip.countries.all(), prefix='countries')
+        context['country_formset'] = country_formset
+
+        # Description Formset
+        description_formset = DescriptionFormSet(
+            queryset=trip.description_set.all(),
+            initial=[{'trip': trip_id}],
+            prefix='descriptions',
+        )
+        context['description_formset'] = description_formset
         return context
-        # ----------------------------------------------------------------------------------------------
 
     def post(self, request, *args, **kwargs):
-        formset = DescriptionFormSet(request.POST)
-        # day_from = request.POST['day_from']
-        # day_to = request.POST['day_to']
-        # city = request.POST['city']
-        # country = request.POST['country']
-        # short_description = request.POST['short_description']
-        # trip = Trip.objects.get(pk=kwargs['pk'])
-        if formset.is_valid():
-            formset.save()
-            messages.success(request, "Data has been saved!")
+        """
+        Handles the data from the formsets.
+        Saves to the database if all is correctly.
+        """
+        trip = Trip.objects.get(pk=kwargs['pk'])
+        description_formset = DescriptionFormSet(request.POST, request.FILES, prefix='descriptions')
+        city_formset = CityFormSet(request.POST, request.FILES, prefix='cities')
+        country_formset = CountryFormSet(request.POST, request.FILES, prefix='countries')
+        count = 0
+        if description_formset.is_valid():
+            description_formset.save()
+            count += 1
+        else:
+            messages.error(request, "There was an error with the description.")
+        if city_formset.is_valid():
+            cities = city_formset.save(commit=False)
+            for city in cities:
+                trip.cities.get_or_create(city=city)
+            city_formset.save()
+            count += 1
+        else:
+            messages.error(request, "There was an error with the city.")
+        if country_formset.is_valid():
+            countries = country_formset.save(commit=False)
+            for country in countries:
+                trip.countries.get_or_create(country=country)
+            country_formset.save()
+            count += 1
+        else:
+            messages.error(request, "There was an error with the country.")
+        if count == 3:
+            messages.success(request, "Data has been correctly saved!")
             return redirect('trip-details', kwargs['pk'])
-        messages.error(request, 'There was an error.')
-        return redirect('trip-details', kwargs['pk'])
+        return redirect('edit-trip', kwargs['pk'])
 
 
 class TripDeleteView(LoginRequiredMixin, View):
@@ -274,7 +318,7 @@ class TripDeleteView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         """
         Deletes the trip instance form the database.
-        Then, redirect to the main page.
+        Then, redirect to the Trip Plan Details page.
         """
         trip = Trip.objects.get(pk=kwargs['pk'])
         trip.delete()

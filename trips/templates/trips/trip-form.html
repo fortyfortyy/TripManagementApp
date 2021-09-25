@@ -32,29 +32,44 @@
             </div>
             <div class="container">
                 <div class="row col-md-6 offset-md-3">
-                    <form method="post" id="form-container">
+                    <form method="post" id="form-container" class="text-white">
                         {% csrf_token %}
                         <div class="row mt-2">
-                            <div class="col-md-6"><label class="labels">From</label><input type="date" class="form-control" name='day_from' id='day_from' value="{{ trip.date_range.0  }}"></div>
-                            <div class="col-md-6"><label class="labels">To</label><input type="date" class="form-control" name='day_to' id='day_to' value="{{ trip.date_range.1 }}"></div>
+                            <div class="col-md-6"><label class="labels" for="day_from">From</label><input type="date" class="form-control" name='day_from' id='day_from' value="{{ trip.date_range.0  }}"></div>
+                            <div class="col-md-6"><label class="labels" for="day_to">To</label><input type="date" class="form-control" name='day_to' id='day_to' value="{{ trip.date_range.1 }}"></div>
                         </div>
                         <div class="row mt-2">
-                            <div class="col-md-6"><label class="labels">City</label><input type="text" class="form-control" placeholder="city" name='city' value='{{ trip.cities.all.get }}'></div>
-                            <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" name='country' value='{{ trip.countries.all.get }}'></div>
+                            <div class="col-md-6" id="city-container">
+                                {{ city_formset.management_form }}
+                                {% for city_form in city_formset %}
+                                    <div class="js-city-form">
+                                        {{ city_form }}
+                                    </div>
+                                {% endfor %}
+                                <button class="btn btn-success m-1" id="add-city-form" type="button">Add</button>
+                            </div>
+                            <div class="col-md-6" id="country-container">
+                                {{ country_formset.management_form }}
+                                {% for country_form in country_formset %}
+                                    <div class="js-country-form">
+                                        {{ country_form }}
+                                    </div>
+                                {% endfor %}
+                                <button class="btn btn-success m-1" id="add-country-form" type="button">Add</button>
+                            </div>
                         </div>
                         <div class="row mt-2 justify-content-center mb-5">
-                            <div class="col-md-6"><label class="labels">Short Description</label><input type="text" class="form-control" placeholder="description" name='short_description' value="{{ trip.short_description }}"></div>
+                            <div class="col-md-6"><label class="labels" for="short_description">Short Description</label><input type="text" class="form-control" placeholder="description" id="short_description" name='short_description' value="{{ trip.short_description }}"></div>
                         </div>
-
-                       {{ formset.management_form }}
-                        {% for desc_form in formset %}
+                       {{ description_formset.management_form }}
+                        {% for desc_form in description_formset %}
                         <div class="row mt-2 js-description-form">
                             <div class="col-md-12">
                                 {{ desc_form }}
                             </div>
                         </div>
                         {% endfor %}
-                        <button class="btn btn-success m-1" id="add-form" type="button">Add</button>
+                        <button class="btn btn-success m-1" id="add-description-form" type="button">Add</button>
                         <button class="btn btn-edit m-1" type="submit">Send</button>
                     </form>
                 </div>
@@ -65,23 +80,66 @@
 
 {% block js %}
         let descriptionForm = document.querySelectorAll(".js-description-form")
-        let container = document.querySelector("#form-container")
-        let addButton = document.querySelector("#add-form")
-        let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+        let descriptionContainer = document.querySelector("#form-container")
+        let descriptionAddButton = document.querySelector("#add-description-form")
+        let descriptionTotalForms = document.querySelector("#id_descriptions-TOTAL_FORMS")
 
-        let formNum = descriptionForm.length-1
-        addButton.addEventListener('click', addForm)
+        let descriptionFormNum = descriptionForm.length-1
+        descriptionAddButton.addEventListener('click', descriptionAddForm)
 
-        function addForm(e){
+        function descriptionAddForm(e){
             e.preventDefault()
 
             let newForm = descriptionForm[0].cloneNode(true)
             let formRegex = RegExp(`form-(\\d){1}-`,'g')
 
-            formNum++
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${formNum}-`)
-            container.insertBefore(newForm, addButton)
+            descriptionFormNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${descriptionFormNum}-`)
+            descriptionContainer.insertBefore(newForm, descriptionAddButton)
 
-            totalForms.setAttribute('value', `${formNum+1}`)
+            descriptionTotalForms.setAttribute('value', `${descriptionFormNum+1}`)
         }
+
+        let cityForm = document.querySelectorAll(".js-city-form")
+        let cityContainer = document.querySelector("#city-container")
+        let cityAddButton = document.querySelector("#add-city-form")
+        let cityTotalForms = document.querySelector("#id_cities-TOTAL_FORMS")
+
+        let cityFormNum = cityForm.length-1
+        cityAddButton.addEventListener('click', cityAddForm)
+
+        function cityAddForm(e){
+            e.preventDefault()
+
+            let newForm = cityForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            cityFormNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${cityFormNum}-`)
+            cityContainer.insertBefore(newForm, cityAddButton)
+
+            cityTotalForms.setAttribute('value', `${cityFormNum+1}`)
+        }
+
+        let countryForm = document.querySelectorAll(".js-country-form")
+        let countryContainer = document.querySelector("#country-container")
+        let countryAddButton = document.querySelector("#add-country-form")
+        let countryTotalForms = document.querySelector("#id_countries-TOTAL_FORMS")
+
+        let countryFormNum = countryForm.length-1
+        countryAddButton.addEventListener('click', countryAddForm)
+
+        function countryAddForm(e){
+            e.preventDefault()
+
+            let newForm = countryForm[0].cloneNode(true)
+            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+            countryFormNum++
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${countryFormNum}-`)
+            countryContainer.insertBefore(newForm, countryAddButton)
+
+            countryTotalForms.setAttribute('value', `${countryFormNum+1}`)
+        }
+
 {% endblock %}

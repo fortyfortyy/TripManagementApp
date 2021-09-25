@@ -1,4 +1,4 @@
-from django.contrib.auth.models import BaseUserManager, AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -85,7 +85,7 @@ class Profile(AbstractUser):
         return str(self.profile_image)[str(self.profile_image).index(f'profile_images/{self.pk}/'):]
 
 
-# TODO w przyszłości future (możliwość dodawania znajomych)
+# TODO in the future friend requests
 # class FriendList(models.Model):
 #     user = models.OneToOneField(Profile, related_name='user', on_delete=models.CASCADE)
 #     friends = models.ManyToManyField(Profile, blank=True, related_name='friends', on_delete=models.CASCADE)
@@ -165,8 +165,8 @@ class Profile(AbstractUser):
 #
 #     def cancel(self):
 #         """
-#         Cance a friend request.
+#         Cancel a friend request.
 #         It's cancelled by setting the 'is_active' field to False.
 #         This is only different with respect to "declining" through the notification that is generated.
-#         # TODO to będzie do budowy w przyszłości systemu notyfikacji
+#         # TODO in the future for notification system
 #         """

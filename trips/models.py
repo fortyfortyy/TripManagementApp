@@ -7,11 +7,9 @@ from stdimage import StdImageField, JPEGField
 
 import uuid
 
-# Create your models here.
-
-
 # https://github.com/codingjoe/django-dynamic-filenames
 # https://github.com/codingjoe/django-stdimage
+
 
 def get_trip_image_filepath(self, filename):
     return f'trips/{str(self.pk)}/{filename}'
@@ -81,7 +79,7 @@ class Trip(models.Model):
 
     @property
     def descriptions(self):
-        # TODO Shift + F6 zmienić descriptions na activity
+        # TODO Shift + F6 change from descriptions to activity
         activities = self.description_set.all().values_list('content', flat=True)
         return activities
 
@@ -130,7 +128,7 @@ class City(models.Model):
 
 
 class Tag(models.Model):
-    tag = models.CharField(_('tag name'), max_length=20, blank=True)
+    tag = models.CharField(_('Tag Name'), max_length=20, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)

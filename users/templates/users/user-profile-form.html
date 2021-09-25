@@ -1,29 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
     <style>
-    body {
-    background: #3C70A1
-}
+        body {
+            background: #3C70A1
+        }
 
-.form-control:focus {
-    box-shadow: none;
-    border-color: #3C70A1
-}
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #3C70A1
+        }
 
-.labels {
-    font-size: 11px
-}
+        .labels {
+            font-size: 11px
+        }
 
-.add-experience:hover {
-    background: #3C70A1;
-    color: #fff;
-    cursor: pointer;
-    border: solid 1px #3C70A1
-}
-
-form input {
-    background-color: red;
-}
+        form input {
+            background-color: red;
+        }
     </style>
 
     <section class="pb-5 header text-center">
@@ -43,17 +36,16 @@ form input {
                         </div>
                         <form method="post">
                             {% csrf_token %}
-{#                            {{form.as_p}}#}
                             <div class="row mt-2">
-                                <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" name='first_name' value="{{ profile.first_name }}"></div>
-                                <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" placeholder="surname" name='last_name' value="{{ profile.last_name }}"></div>
+                                <div class="col-md-6"><label class="labels" for="first_name">Name</label><input type="text" class="form-control" id="first_name" placeholder="first name" name='first_name' value="{{ profile.first_name }}"></div>
+                                <div class="col-md-6"><label class="labels" for="last_name">Surname</label><input type="text" class="form-control" id="last_name" placeholder="surname" name='last_name' value="{{ profile.last_name }}"></div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-12"><label class="labels">Username</label><input type="text" class="form-control" placeholder="enter address" name='username' value="{{ profile.username }}"></div>
-                                <div class="col-md-12"><label class="labels">Bio</label><input type="text" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro|default_if_none:'' }}"></div>
+                                <div class="col-md-12"><label class="labels" for="username">Username</label><input type="text" id="username" class="form-control" placeholder="enter address" name='username' value="{{ profile.username }}"></div>
+                                <div class="col-md-12"><label class="labels" for="short_intro">Bio</label><input type="text" id="short_intro" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro|default_if_none:'' }}"></div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-6"><label class="labels">Location</label><input type="text" class="form-control" placeholder="country" name="location" value="{{ profile.location|default_if_none:'' }}"></div>
+                                <div class="col-md-6"><label class="labels" for="location">Location</label><input type="text" id="location" class="form-control" placeholder="country" name="location" value="{{ profile.location|default_if_none:'' }}"></div>
                             </div>
                             <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Save Profile</button></div>
                             {% if registration_form.errors %}

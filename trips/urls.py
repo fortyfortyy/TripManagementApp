@@ -1,4 +1,5 @@
 from django.urls import path
+
 from trips import views as ex_views
 
 urlpatterns = [

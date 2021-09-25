@@ -9,14 +9,17 @@
                             {% csrf_token %}
                             <div class="row m-5">
                                 <div class="col-md-12">
-                                    <label class="labels" for="id_name">Name of the Plan</label>
+                                    <label class="labels" for="id_name">Name Of The Plan</label>
                                     <input type="text" class="form-control" placeholder="Best Holidays" id="id_name" name='name' value=" {{ form.name.value|default_if_none:'' }}">
                                 </div>
-                                <div class="col-md-4">
-                                    {% for tag in form.tags %}
-                                        <label class="labels" for="id_tag">Tag</label>
-                                        <input type="text" id="id_tag" class="form-control" placeholder="#bestholidays" name='tags' value="{{ form.tags.value.0|default_if_none:'' }}">
+                                <div class="col-md-4" id="tag-container">
+                                    {{ tag_formset.management_form }}
+                                    {% for tag_form in tag_formset %}
+                                        <div class="js-tags-form">
+                                            {{ tag_form }}
+                                        </div>
                                     {% endfor %}
+                                    <button class="btn btn-success m-1" id="add-tags-form" type="button">add another tag</button>
                                 </div>
                                 <div class="form-check form-switch m-2">
                                     <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" name='is_private' checked>
@@ -24,9 +27,9 @@
                                 </div>
                             </div>
                             {% if update == True %}
-                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Update the Plan Trip</button></div>
+                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Update Trip's Plan</button></div>
                             {% else %}
-                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Add the new Plan Trip</button></div>
+                                <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Add Trip's Plan</button></div>
                             {% endif %}
                         </form>
                     </div>
@@ -34,4 +37,26 @@
             </div>
         </div>
     </div>
+{% endblock %}
+{% block js %}
+    let tagForm = document.querySelectorAll(".js-tags-form")
+    let tagContainer = document.querySelector("#tag-container")
+    let tagAddButton = document.querySelector("#add-tags-form")
+    let tagTotalForms = document.querySelector("#id_tags-TOTAL_FORMS")
+
+    let tagFormNum = tagForm.length-1
+    tagAddButton.addEventListener('click', tagAddForm)
+
+    function tagAddForm(e){
+        e.preventDefault()
+
+        let newForm = tagForm[0].cloneNode(true)
+        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+
+        tagFormNum++
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${tagFormNum}-`)
+        tagContainer.insertBefore(newForm, tagAddButton)
+
+        tagTotalForms.setAttribute('value', `${tagFormNum+1}`)
+    }
 {% endblock %}
