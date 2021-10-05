@@ -6,8 +6,8 @@ from django.views import View
 from django.views.generic import UpdateView
 
 from trips.forms import CityFormSet, CountryFormSet, DescriptionFormSet, TagFormSet, TripCreateForm, \
-                        TripPlanCreateEditForm
-from trips.models import Tag, Trip, TripPlan
+    TripPlanCreateEditForm
+from trips.models import Tag, Trip, TripPlan, Description
 
 
 class TripPlansView(LoginRequiredMixin, View):
@@ -57,7 +57,7 @@ class TripPlanCreateView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         """
-        Checks whether the data is valid. Saves to tag/s to the Trip Plan given instance.
+        Checks whether the data is valid. Saves tag/s to the Trip Plan given instance.
         """
         form = self.form_class(request.POST)
         tag_formset = TagFormSet(request.POST, request.FILES, prefix='tags')
@@ -69,7 +69,7 @@ class TripPlanCreateView(LoginRequiredMixin, View):
             tags = tag_formset.save(commit=False)
             for tag in tags:
                 trip_plan.tags.get_or_create(tag=tag)
-            tag_formset.save()
+            # tag_formset.save()
             messages.success(request, 'The new trip plan has been added!')
             return redirect('create-trip', trip_plan.pk)
 
@@ -114,7 +114,7 @@ class TripPlanEditView(LoginRequiredMixin, View):
         Returns the forms that are based on previous data for the tag/s and for the Trip Plan.
         """
         trip_plan = TripPlan.objects.get(pk=kwargs['pk'])
-        tag_formset = TagFormSet(queryset=trip_plan.tags.all(),  prefix='tags')
+        tag_formset = TagFormSet(queryset=trip_plan.tags.all(), prefix='tags')
         self.context['tag_formset'] = tag_formset
         self.context['form'] = self.form_class(instance=trip_plan)
         self.context['update'] = True
@@ -130,8 +130,9 @@ class TripPlanEditView(LoginRequiredMixin, View):
         tag_formset = TagFormSet(request.POST, request.FILES, prefix='tags')
         if form.is_valid() and tag_formset.is_valid():
             form.save()
-            tags = tag_formset.save(commit=False)
-            for tag in tags:
+            # tags = tag_formset.save(commit=False)
+            breakpoint()
+            for tag in tag_formset:
                 trip_plan.tags.get_or_create(tag=tag)
             tag_formset.save()
             messages.success(request, f"{trip_plan.name} has been updated!")
@@ -246,7 +247,7 @@ class TripEditView(LoginRequiredMixin, UpdateView):
         trip = Trip.objects.get(pk=trip_id)
 
         # City Formset
-        city_formset = CityFormSet(queryset=trip.cities.all(),  prefix='cities')
+        city_formset = CityFormSet(queryset=trip.cities.all(), prefix='cities')
         context['city_formset'] = city_formset
 
         # Country Formset
@@ -273,7 +274,15 @@ class TripEditView(LoginRequiredMixin, UpdateView):
         country_formset = CountryFormSet(request.POST, request.FILES, prefix='countries')
         count = 0
         if description_formset.is_valid():
-            description_formset.save()
+            for desc_form in description_formset:
+                if desc_form.cleaned_data['content'] != '' and not desc_form.cleaned_data['DELETE']:
+                    desc_form.save()
+                if desc_form.cleaned_data['DELETE']:
+                    try:
+                        obj = Description.objects.get(trip=trip, content=desc_form.cleaned_data['content'])
+                        obj.delete()
+                    except Description.DoesNotExist:
+                        pass
             count += 1
         else:
             messages.error(request, "There was an error with the description.")

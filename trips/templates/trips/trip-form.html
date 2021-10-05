@@ -91,10 +91,14 @@
             e.preventDefault()
 
             let newForm = descriptionForm[0].cloneNode(true)
-            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            let formRegex = RegExp(`descriptions-(\\d){1}-`,'g')
 
             descriptionFormNum++
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${descriptionFormNum}-`)
+
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `descriptions-${descriptionFormNum}-`)
+            firstLabel = newForm.querySelectorAll('label')[0].innerHTML = ""
+            newForm.querySelector(`#id_descriptions-${descriptionFormNum}-content`).value = ""
+
             descriptionContainer.insertBefore(newForm, descriptionAddButton)
 
             descriptionTotalForms.setAttribute('value', `${descriptionFormNum+1}`)
@@ -112,10 +116,13 @@
             e.preventDefault()
 
             let newForm = cityForm[0].cloneNode(true)
-            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            let formRegex = RegExp(`cities-(\\d){1}-`,'g')
 
             cityFormNum++
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${cityFormNum}-`)
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `cities-${cityFormNum}-`)
+{#            firstLabel = newForm.querySelectorAll('label')[0].innerHTML = ""#}
+            newForm.querySelector(`#id_cities-${cityFormNum}-city`).value = ""
+
             cityContainer.insertBefore(newForm, cityAddButton)
 
             cityTotalForms.setAttribute('value', `${cityFormNum+1}`)
@@ -133,10 +140,12 @@
             e.preventDefault()
 
             let newForm = countryForm[0].cloneNode(true)
-            let formRegex = RegExp(`form-(\\d){1}-`,'g')
+            let formRegex = RegExp(`countries-(\\d){1}-`,'g')
 
             countryFormNum++
-            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${countryFormNum}-`)
+            newForm.innerHTML = newForm.innerHTML.replace(formRegex, `countries-${countryFormNum}-`)
+            newForm.querySelector(`#id_countries-${countryFormNum}-country`).value = ""
+
             countryContainer.insertBefore(newForm, countryAddButton)
 
             countryTotalForms.setAttribute('value', `${countryFormNum+1}`)

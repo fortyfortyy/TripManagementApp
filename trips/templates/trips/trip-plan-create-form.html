@@ -51,10 +51,10 @@
         e.preventDefault()
 
         let newForm = tagForm[0].cloneNode(true)
-        let formRegex = RegExp(`form-(\\d){1}-`,'g')
+        let formRegex = RegExp(`tags-(\\d){1}-`,'g')
 
         tagFormNum++
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `form-${tagFormNum}-`)
+        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `tags-${tagFormNum}-`)
         tagContainer.insertBefore(newForm, tagAddButton)
 
         tagTotalForms.setAttribute('value', `${tagFormNum+1}`)

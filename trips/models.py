@@ -7,6 +7,7 @@ from stdimage import StdImageField, JPEGField
 
 import uuid
 
+
 # https://github.com/codingjoe/django-dynamic-filenames
 # https://github.com/codingjoe/django-stdimage
 
