@@ -65,11 +65,10 @@ class TripPlanCreateView(LoginRequiredMixin, View):
             trip_plan = form.save(commit=False)
             trip_plan.owner = request.user
             trip_plan.save()
+            for tag in tag_formset.cleaned_data:
+                if tag['tag'] != '' and not tag['DELETE']:
+                    trip_plan.tags.get_or_create(tag=tag['tag'])
 
-            tags = tag_formset.save(commit=False)
-            for tag in tags:
-                trip_plan.tags.get_or_create(tag=tag)
-            # tag_formset.save()
             messages.success(request, 'The new trip plan has been added!')
             return redirect('create-trip', trip_plan.pk)
 
@@ -130,10 +129,11 @@ class TripPlanEditView(LoginRequiredMixin, View):
         tag_formset = TagFormSet(request.POST, request.FILES, prefix='tags')
         if form.is_valid() and tag_formset.is_valid():
             form.save()
-            # tags = tag_formset.save(commit=False)
-            breakpoint()
-            for tag in tag_formset:
-                trip_plan.tags.get_or_create(tag=tag)
+            tags = tag_formset.save(commit=False)
+
+            for tag in tags:
+                if tag:
+                    trip_plan.tags.get_or_create(tag=tag)
             tag_formset.save()
             messages.success(request, f"{trip_plan.name} has been updated!")
             return redirect('trip-plan-details', trip_plan.pk)
@@ -279,7 +279,7 @@ class TripEditView(LoginRequiredMixin, UpdateView):
                     desc_form.save()
                 if desc_form.cleaned_data['DELETE']:
                     try:
-                        obj = Description.objects.get(trip=trip, content=desc_form.cleaned_data['content'])
+                        obj = Description.objects.filter(trip=trip, content=desc_form.cleaned_data['content'])
                         obj.delete()
                     except Description.DoesNotExist:
                         pass
@@ -289,7 +289,8 @@ class TripEditView(LoginRequiredMixin, UpdateView):
         if city_formset.is_valid():
             cities = city_formset.save(commit=False)
             for city in cities:
-                trip.cities.get_or_create(city=city)
+                if city:
+                    trip.cities.get_or_create(city=city)
             city_formset.save()
             count += 1
         else:
@@ -297,7 +298,8 @@ class TripEditView(LoginRequiredMixin, UpdateView):
         if country_formset.is_valid():
             countries = country_formset.save(commit=False)
             for country in countries:
-                trip.countries.get_or_create(country=country)
+                if country:
+                    trip.countries.get_or_create(country=country)
             country_formset.save()
             count += 1
         else:

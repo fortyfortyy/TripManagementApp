@@ -24,7 +24,7 @@ class TagForm(forms.ModelForm):
             'tag': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'placeholder': '#holidays'
+                'placeholder': '#holidays',
             }),
         }
 
@@ -59,7 +59,7 @@ class TripDescriptionForm(forms.ModelForm):
             'content': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'placeholder': 'visit a museum...'
+                'placeholder': 'visit a museum...',
             }),
         }
 
@@ -76,7 +76,7 @@ class CityForm(forms.ModelForm):
             'city': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'placeholder': 'Barcelona...'
+                'placeholder': 'Barcelona...',
             }),
         }
 
@@ -93,7 +93,7 @@ class CountryForm(forms.ModelForm):
             'country': forms.TextInput(attrs={
                 'type': 'text',
                 'class': 'form-control',
-                'placeholder': 'Spain...'
+                'placeholder': 'Spain...',
             }),
         }
 

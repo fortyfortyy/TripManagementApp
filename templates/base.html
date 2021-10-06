@@ -51,10 +51,8 @@
         <script src="{% static 'bootstrap/js/jquery.min.js' %}"></script>
         <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"></script>
-        <script>
-            {% block js %}
+        {% block js %}
 
-            {% endblock %}
-        </script>
+        {% endblock %}
     </body>
 </html>

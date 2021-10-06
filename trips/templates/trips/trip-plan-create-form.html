@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
     <div class="container">
         <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
@@ -39,24 +40,5 @@
     </div>
 {% endblock %}
 {% block js %}
-    let tagForm = document.querySelectorAll(".js-tags-form")
-    let tagContainer = document.querySelector("#tag-container")
-    let tagAddButton = document.querySelector("#add-tags-form")
-    let tagTotalForms = document.querySelector("#id_tags-TOTAL_FORMS")
-
-    let tagFormNum = tagForm.length-1
-    tagAddButton.addEventListener('click', tagAddForm)
-
-    function tagAddForm(e){
-        e.preventDefault()
-
-        let newForm = tagForm[0].cloneNode(true)
-        let formRegex = RegExp(`tags-(\\d){1}-`,'g')
-
-        tagFormNum++
-        newForm.innerHTML = newForm.innerHTML.replace(formRegex, `tags-${tagFormNum}-`)
-        tagContainer.insertBefore(newForm, tagAddButton)
-
-        tagTotalForms.setAttribute('value', `${tagFormNum+1}`)
-    }
+    <script src="{% static 'js/tags-form.js' %}"></script>
 {% endblock %}
