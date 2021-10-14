@@ -28,8 +28,9 @@ class CustomUserCreationForm(UserCreationForm):
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
-        if len(email) > 60:
-            raise ValidationError(_('Email is too long. Max 60 characters. Please try another one.'), code='long_email')
+        if len(email) > 255:
+            raise ValidationError(_('Email is too long. Max 255 characters. Please try again.'), code='long_email')
+
         try:
             account = Profile.objects.get(email=email)
         except Profile.DoesNotExist:
@@ -63,16 +64,12 @@ class LoginForm(forms.Form):
         'placeholder': 'Password',
     }))
 
-    # def clean(self):
-    #     cleaned_data = super().clean()
-    #     username = cleaned_data.get('username').lower()
-    #     if len(username) > 60:
-    #         raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
-    #                               code='long_username')
-    #
-    #     password = cleaned_data.get('password')
-    #     if not authenticate(email=username, password=password):
-    #         raise ValidationError('Invalid username or password', code='invalid_authenticate')
+    def clean(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username').lower()
+        if len(username) > 60:
+            raise ValidationError(_('Username is too long. Max 60 characters. Please try another one.'),
+                                  code='long_username')
 
 
 class ProfileForm(forms.ModelForm):
@@ -80,20 +77,37 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('first_name', 'last_name', 'username', 'profile_image', 'location', 'short_intro')
 
-    # def __init__(self, *args, **kwargs):
-    #     super(ProfileForm, self).__init__(*args, **kwargs)
-    #
-    #     self.fields['first_name'].widget.attrs.update(
-    #         {'type': 'text', 'name': 'first_name', 'class': 'form-control', 'placeholder': 'first name'})
-    #
-    #     self.fields['last_name'].widget.attrs.update(
-    #         {'type': 'text', 'name': 'last_name', 'class': 'form-control', 'placeholder': 'surname'})
-    #
-    #     self.fields['username'].widget.attrs.update(
-    #         {'type': 'text', 'name': 'username', 'class': 'form-control', 'placeholder': 'username'})
-    #
-    #     self.fields['short_intro'].widget.attrs.update(
-    #         {'type': 'text', 'name': 'short_intro', 'class': 'form-control', 'placeholder': 'bio'})
-    #
-    #     self.fields['location'].widget.attrs.update(
-    #         {'type': 'text', 'name': 'location', 'class': 'form-control', 'placeholder': 'location'})
+    def clean_first_name(self):
+        cleaned_data = super().clean()
+        first_name = cleaned_data.get('first_name').lower()
+        if len(first_name) > 150:
+            raise ValidationError(_(f'{first_name} is too long. Max 150 characters. Please try another one.'),
+                                  code='long_first_name')
+
+    def clean_last_name(self):
+        cleaned_data = super().clean()
+        last_name = cleaned_data.get('last_name').lower()
+        if len(last_name) > 150:
+            raise ValidationError(_(f'{last_name} is too long. Max 150 characters. Please try another one.'),
+                                  code='long_last_name')
+
+    def clean_username(self):
+        cleaned_data = super().clean()
+        username = cleaned_data.get('username').lower()
+        if len(username) > 60:
+            raise ValidationError(_(f'{username} is too long. 60 characters or fewer. Please try another one.'),
+                                  code='long_username')
+
+    def clean_location(self):
+        cleaned_data = super().clean()
+        location = cleaned_data.get('location').lower()
+        if len(location) > 50:
+            raise ValidationError(_(f'{location} is too long. 50 characters or fewer. Please try another one.'),
+                                  code='long_location')
+
+    def clean_short_intro(self):
+        cleaned_data = super().clean()
+        short_intro = cleaned_data.get('short_intro').lower()
+        if len(short_intro) > 200:
+            raise ValidationError(_('Short intro is too long. Max 200 characters. Please try another one.'),
+                                  code='long_short_intro')

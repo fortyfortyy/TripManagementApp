@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.core.validators import validate_email
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -54,7 +55,12 @@ def get_default_profile_image():
 
 class Profile(AbstractUser):
 
-    email = models.EmailField(_('email address'), max_length=60, unique=True)
+    email = models.EmailField(
+        _('email address'),
+        max_length=255,
+        unique=True,
+        validators=[validate_email],
+    )
     short_intro = models.CharField(_('short intro'), max_length=200, null=True, blank=True)
     username = models.CharField(
         _('username'),

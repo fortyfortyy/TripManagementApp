@@ -97,7 +97,7 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return redirect('trip-plans')
-
+        breakpoint()
         self.context['form'] = form
         return render(request, self.template_class, self.context)
 
