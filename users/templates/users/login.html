@@ -19,9 +19,12 @@
         border-top-left-radius: 0;
         border-top-right-radius: 0;
         }
+        .form-gap {
+            padding-top: 150px;
+        }
     </style>
 
-    <div class="container-fluid">
+    <div class="container-fluid form-gap">
         <div class="row justify-content-center">
             <div class="card card-signin">
                 <div class="card-body">
@@ -29,7 +32,9 @@
                         {% csrf_token %}
 
                         {% for field in form %}
-                            {{ field }}
+                            <div class="m-2">
+                                {{ field }}
+                            </div>
                         {% endfor %}
 
                         {% for field in login_form %}
@@ -48,7 +53,7 @@
                         <button class="btn btn-trip-login-logout" type="submit">Log in</button>
                     </form>
 
-                    <div class="d-flex flex-column my-4">
+                    <div class="d-flex  flex-column my-4">
                         <a style="color: #034A70" class="m-auto" href="{% url 'password_reset' %}">Reset password</a>
                     </div>
                 </div>

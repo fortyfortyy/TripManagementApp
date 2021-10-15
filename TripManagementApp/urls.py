@@ -39,13 +39,14 @@ urlpatterns = [
          subject_template_name='password_reset/password_reset_subject.txt'),
          name='password_reset'),
 
-    path('password_reset/done/',
+    path('password_reset_sent/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_done.html'),
          name='password_reset_done'),
 
-    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
 
-    path('reset/done/',
+    path('password_reset_complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 ]
