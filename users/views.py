@@ -97,8 +97,8 @@ class LoginView(View):
             if user is not None:
                 login(request, user)
                 return redirect('trip-plans')
-        breakpoint()
         self.context['form'] = form
+        messages.error(request, "There was an error. Please try with another username.")
         return render(request, self.template_class, self.context)
 
 

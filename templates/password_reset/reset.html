@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container form-gap">
+        <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+            <div class="row">
+                <div class="card p-4">
+                    <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="row m-5">
+                                <div class="col-md-12">
+                                    <h2 class="text-center">Enter new password</h2>
+                                       <p>
+                                           Please enter your new password twice so we can verify you
+                                           typed it in correctly.
+                                       </p>
+                                    <label class="" for="id_new_password1">
+                                        <input name="new_password1" class="form-control" placeholder="New password"
+                                               type="password" id="id_new_password1" required>
+                                    </label>
+                                    <label for="id_new_password2">
+                                        <input name="new_password2" class="form-control" placeholder="Confirm password"
+                                               type="password" id="id_new_password2" required>
+                                    </label>
+                                    {% for error in field.errors %}
+                                        <p style="color: red">{{ error }}</p>
+                                    {% endfor %}
+
+                                    <button class="btn btn-success m-1" id="add-tags-form" type="submit">
+                                        Change password
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

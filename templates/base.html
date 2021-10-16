@@ -19,17 +19,19 @@
         {% include 'snippets/navbar.html' %}
 
         {% if messages %}
+            <div class="flex-lg-row justify-content-center">
             {% for message in messages %}
                 {% if message.tags == 'error' %}
-                    <div class="alert alert-danger col-sm-3" role="alert">
+                    <div class="alert alert-danger col-sm-3 text-center m-1" role="alert">
                             {{ message }}
                     </div>
                 {% elif message.tags == 'success' %}
-                    <div class="alert alert-success col-sm-3" role="alert">
+                    <div class="alert alert-success col-sm-3 text-center" role="alert">
                          {{ message }}
                     </div>
                 {% endif %}
             {% endfor %}
+            </div>
         {% endif %}
 
         <!-- Body -->
