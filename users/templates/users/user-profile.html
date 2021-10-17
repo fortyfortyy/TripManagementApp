@@ -77,7 +77,6 @@
                 {% if request.user.pk == profile.pk %}
                     <div class=" d-flex mt-2">
                         <form action="{% url 'user-profile' profile.pk %}" method="get">
-                            {% csrf_token %}
                             <button name="edit-profile" class="btn btn-trip-login-logout" type="submit" value="edit-profile">Edit Profile</button>
                         </form>
                     </div>

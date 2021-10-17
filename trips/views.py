@@ -18,7 +18,6 @@ class TripPlansView(LoginRequiredMixin, View):
     """
     login_url = 'accounts/login/'
     template_class = 'trips/trip-plans.html'
-    permission_denied_message = 'fck you'
     context = {}
 
     def get(self, request, *args, **kwargs):
@@ -34,6 +33,10 @@ class TripPlansView(LoginRequiredMixin, View):
             self.context['trip_plans'] = trip_plans
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in first to could see the plans!")
+        return super(TripPlansView, self).handle_no_permission()
+
 
 class TripPlanCreateView(LoginRequiredMixin, View):
     """
@@ -41,8 +44,8 @@ class TripPlanCreateView(LoginRequiredMixin, View):
     Handles the data from the form and saves to database.
     Then, redirect to the trip create page.
     """
-    login_url = 'accounts/login/'
     template_class = 'trips/trip-plan-create-form.html'
+    login_url = '/accounts/login/'
     form_class = TripPlanCreateEditForm
     context = {}
 
@@ -77,12 +80,16 @@ class TripPlanCreateView(LoginRequiredMixin, View):
         self.context['form'] = form
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in first to could create a plan!")
+        return super(TripPlanCreateView, self).handle_no_permission()
+
 
 class TripPlanDetailsView(LoginRequiredMixin, View):
     """
     Displays details of the TripPlan.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/trip-plan-details.html'
     context = {}
 
@@ -96,6 +103,10 @@ class TripPlanDetailsView(LoginRequiredMixin, View):
         self.context['trip_plan'] = trip_plan
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to see that Trip Plan!")
+        return super(TripPlanDetailsView, self).handle_no_permission()
+
 
 class TripPlanEditView(LoginRequiredMixin, View):
     """
@@ -103,7 +114,7 @@ class TripPlanEditView(LoginRequiredMixin, View):
     Handles the data from the form and updates to database.
     Then, redirects to the main page.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/trip-plan-create-form.html'
     form_class = TripPlanCreateEditForm
     context = {}
@@ -143,13 +154,17 @@ class TripPlanEditView(LoginRequiredMixin, View):
         self.context['form'] = form
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You can't edit this plan!")
+        return super(TripPlanEditView, self).handle_no_permission()
+
 
 class TripPlanDeleteView(LoginRequiredMixin, View):
     """
     Deletes the Trip Plan object from the database.
     Then, redirects to the main page.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/delete-form.html'
     context = {}
 
@@ -164,12 +179,16 @@ class TripPlanDeleteView(LoginRequiredMixin, View):
         messages.success(request, 'Trip Plan has been deleted successfully')
         return redirect('trip-plans')
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You can't delete that plan!")
+        return super(TripPlanDeleteView, self).handle_no_permission()
+
 
 class TripCreateView(LoginRequiredMixin, View):
     """
     Displays the create form for the Trip, then handles the data.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/trip-create-form.html'
     form_class = TripCreateForm
     context = {}
@@ -206,12 +225,16 @@ class TripCreateView(LoginRequiredMixin, View):
         self.context['form'] = form
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to could create a trip!")
+        return super(TripCreateView, self).handle_no_permission()
+
 
 class TripDetailsView(LoginRequiredMixin, View):
     """
     Displays the extended details of the chosen Trip.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/trip-details.html'
     context = {}
 
@@ -226,6 +249,10 @@ class TripDetailsView(LoginRequiredMixin, View):
         self.context['trip'] = trip
         return render(request, self.template_class, self.context)
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to could see that Trip!")
+        return super(TripDetailsView, self).handle_no_permission()
+
 
 class TripEditView(LoginRequiredMixin, UpdateView):
     """
@@ -233,7 +260,7 @@ class TripEditView(LoginRequiredMixin, UpdateView):
     Handles the data from the form and updates to database.
     Then, redirects to the Trip Details page.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_name = 'trips/trip-form.html'
     model = Trip
     fields = '__all__'
@@ -309,12 +336,16 @@ class TripEditView(LoginRequiredMixin, UpdateView):
             return redirect('trip-details', kwargs['pk'])
         return redirect('edit-trip', kwargs['pk'])
 
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to could edit that Trip!")
+        return super(TripEditView, self).handle_no_permission()
+
 
 class TripDeleteView(LoginRequiredMixin, View):
     """
     Delete the Trip based on its Plan.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     template_class = 'trips/delete-form.html'
     context = {}
 
@@ -335,3 +366,7 @@ class TripDeleteView(LoginRequiredMixin, View):
         trip.delete()
         messages.success(request, 'Trip has been deleted successfully')
         return redirect('trip-plan-details', trip.plan.pk)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You need to log in to could delete that Trip!")
+        return super(TripDeleteView, self).handle_no_permission()

@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
     <style>
-        body {
-            background: #3C70A1
-        }
-
         .form-control:focus {
             box-shadow: none;
             border-color: #3C70A1
@@ -50,11 +46,11 @@
                                 <div class="col-md-6"><label class="labels" for="last_name">Surname</label><input type="text" class="form-control" id="last_name" placeholder="surname" name='last_name' value="{{ profile.last_name }}"></div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-12"><label class="labels" for="username">Username</label><input type="text" id="username" class="form-control" placeholder="enter address" name='username' value="{{ profile.username }}"></div>
-                                <div class="col-md-12"><label class="labels" for="short_intro">Bio</label><input type="text" id="short_intro" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro|default_if_none:'' }}"></div>
+                                <div class="col-md-12"><label class="labels" for="username">Username</label><input type="text" id="username" class="form-control" placeholder="enter username" name='username' value="{{ profile.username }}"></div>
+                                <div class="col-md-12"><label class="labels" for="short_intro">Bio</label><input type="text" id="short_intro" class="form-control" placeholder="short intro" name='short_intro' value="{{ profile.short_intro }}"></div>
                             </div>
                             <div class="row mt-3">
-                                <div class="col-md-6"><label class="labels" for="location">Location</label><input type="text" id="location" class="form-control" placeholder="country" name="location" value="{{ profile.location|default_if_none:'' }}"></div>
+                                <div class="col-md-6"><label class="labels" for="location">Location</label><input type="text" id="location" class="form-control" placeholder="country" name="location" value="{{ profile.location }}"></div>
                             </div>
                             <div class="mt-5 text-center"><button class="btn btn-trip-login-logout" type="submit">Save Profile</button></div>
                             {% if registration_form.errors %}

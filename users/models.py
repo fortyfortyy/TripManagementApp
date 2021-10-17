@@ -61,7 +61,7 @@ class Profile(AbstractUser):
         unique=True,
         validators=[validate_email],
     )
-    short_intro = models.CharField(_('short intro'), max_length=200, null=True, blank=True)
+    short_intro = models.CharField(_('short intro'), max_length=200, blank=True)
     username = models.CharField(
         _('username'),
         max_length=60,
@@ -74,7 +74,7 @@ class Profile(AbstractUser):
     )
     profile_image = models.ImageField(
         max_length=255, blank=True, null=True, upload_to=get_profile_image_filepath, default=get_default_profile_image)
-    location = models.CharField(_('location'), max_length=50, null=True, blank=True)
+    location = models.CharField(_('location'), max_length=50, blank=True)
     last_login = models.DateTimeField(_('last login'), auto_now=True)
     id = models.UUIDField(default=uuid.uuid4, unique=True,
                           primary_key=True, editable=False)

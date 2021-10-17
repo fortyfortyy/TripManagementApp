@@ -1,43 +1,37 @@
-# To jest używane wtedy kiedy chciałbym stworzyć bazowy model User który Profil odnosił
-# by się do niego bezpośrednio. Wtedy używam sygnałów
-# from django.db.models.signals import post_save, post_delete
-# from django.dispatch import receiver
-#
-# from django.contrib.auth.models import User
-# from .models import Profile
-#
-# # TODO in the future for the email (import)
-# from django.core.mail import send_mail
-# from django.conf import settings
-#
-#
-# @receiver(post_save, sender=User)
-# def createProfile(sender, instance, created, **kwargs):
-#     if created:
-#         user = instance
-#         Profile.objects.create(
-#             user=user,
-#             first_name=user.first_name,
-#             username=user.username,
-#             email=user.email,
-#         )
-#
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
+from django.contrib.auth.models import User
+from .models import Profile
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+
+@receiver(post_save, sender=Profile)
+def createProfile(sender, instance, created, **kwargs):
+    if created:
+        profile = instance
+        print('------------------------')
+        print(instance)
+        print('------------------------')
+        breakpoint()
 #         # TODO in the future for creating friends list
 #         # FriendList.objects.create(
 #         #     user=user,
 #         # )
 #
 #         # TODO in the future to send the welcome email
-#         # subject = 'Welcome to Trip Management App'
-#         # message = 'We are glad you are here!'
-#         #
-#         # send_mail(
-#         #     subject,
-#         #     message,
-#         #     settings.EMAIL_HOST_USER,
-#         #     [profile.email],
-#         #     fail_silently=False,
-#         # )
+        subject = 'Welcome to Trip Management App'
+        message = 'We are glad you are here!'
+
+        send_mail(
+            subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [profile.email],
+            fail_silently=False,
+        )
 #
 #
 # @receiver(post_save, sender=Profile)

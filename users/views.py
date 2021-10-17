@@ -12,7 +12,7 @@ class UserView(LoginRequiredMixin, View):
     """
     Show the user account page.
     """
-    login_url = 'accounts/login/'
+    login_url = '/accounts/login/'
     form_class = ProfileForm
     form_class_template = 'users/user-profile-form.html'
     template_class = 'users/user-profile.html'
@@ -41,6 +41,10 @@ class UserView(LoginRequiredMixin, View):
         messages.error(request, "Something gone wrong. Try again.")
         self.context['form'] = form
         return render(request, self.form_class_template, self.context)
+
+    def handle_no_permission(self):
+        messages.error(self.request, "You need first to log in to could see your profile!")
+        return super(UserView, self).handle_no_permission()
 
 
 class RegisterView(View):
@@ -98,7 +102,7 @@ class LoginView(View):
                 login(request, user)
                 return redirect('trip-plans')
         self.context['form'] = form
-        messages.error(request, "There was an error. Please try with another username.")
+        messages.error(request, "There was an error. Please try with the correct username or password.")
         return render(request, self.template_class, self.context)
 
 
