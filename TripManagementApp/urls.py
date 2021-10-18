@@ -25,21 +25,21 @@ urlpatterns = [
     path('', include('trips.urls')),
 
     # Password reset links (ref: https://github.com/django/django/blob/master/django/contrib/auth/views.py)
-    path('password_change/', auth_views.PasswordChangeView.as_view(
+    path('password/change/', auth_views.PasswordChangeView.as_view(
          template_name='password_reset/password_change_form.html'),
          name='password_change'),
 
-    path('password_change/done/',
+    path('password/change/done/',
          auth_views.PasswordChangeDoneView.as_view(template_name='password_reset/password_change_done.html'),
          name='password_change_done'),
 
-    path('password_reset/', auth_views.PasswordResetView.as_view(
+    path('password/reset/', auth_views.PasswordResetView.as_view(
          email_template_name='password_reset/password_reset_email.html',
          template_name='password_reset/password_reset_form.html',
          subject_template_name='password_reset/password_reset_subject.txt'),
          name='password_reset'),
 
-    path('password_reset_sent/',
+    path('password/reset/sent/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_done.html'),
          name='password_reset_done'),
 
@@ -47,7 +47,7 @@ urlpatterns = [
         template_name='password_reset/reset.html'),
          name='password_reset_confirm'),
 
-    path('password_reset_complete/',
+    path('password/reset/complete/',
          auth_views.PasswordResetCompleteView.as_view(template_name='password_reset/password_reset_complete.html'),
          name='password_reset_complete'),
 ]

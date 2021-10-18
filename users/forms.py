@@ -75,7 +75,7 @@ class LoginForm(forms.Form):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('first_name', 'last_name', 'username', 'location', 'short_intro')
+        fields = ('first_name', 'last_name', 'location', 'short_intro')
 
     def clean_first_name(self):
         cleaned_data = super().clean()
@@ -92,14 +92,6 @@ class ProfileForm(forms.ModelForm):
             raise ValidationError(_(f'{last_name} is too long. Max 150 characters. Please try another one.'),
                                   code='long_last_name')
         return last_name
-
-    def clean_username(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get('username')
-        if len(username) > 60:
-            raise ValidationError(_(f'{username} is too long. 60 characters or fewer. Please try another one.'),
-                                  code='long_username')
-        return username
 
     def clean_location(self):
         cleaned_data = super().clean()

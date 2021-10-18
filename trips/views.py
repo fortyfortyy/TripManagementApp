@@ -22,7 +22,7 @@ class TripPlansView(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.context['trip_plans'] = TripPlan.objects.all()
-        search_query = request.GET.get('search_query')
+        search_query = request.GET.get('search_query', '')
         if search_query:
             trip_plans = TripPlan.objects.filter(
                 Q(name__icontains=search_query) |

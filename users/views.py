@@ -1,11 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.models import Site
 from django.shortcuts import redirect, render
 from django.views import View
 
+# email
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+
+from TripManagementApp import settings
 from users.forms import CustomUserCreationForm, ProfileForm, LoginForm
 from users.models import Profile
+from users.utils import account_activation_token
 
 
 class UserView(LoginRequiredMixin, View):
@@ -26,7 +33,7 @@ class UserView(LoginRequiredMixin, View):
             return redirect('trip-plans')
 
         self.context['profile'] = profile
-        if request.GET.get('edit-profile'):
+        if request.GET.get('edit-profile', ''):
             self.context['form'] = self.form_class(instance=profile)
             return render(request, self.form_class_template, self.context)
         return render(request, self.template_class, self.context)
@@ -65,14 +72,41 @@ class RegisterView(View):
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = form.save()
-            messages.success(request, 'User account was created!')
+            profile = form.save(commit=False)
+            profile.is_active = False
+            profile.site = Site.objects.get(pk=settings.SITE_ID)
+            profile.save()
 
-            login(request, user)
-            return redirect('trip-plans')
-
+            messages.info(request, 'Please confirm your email address to complete the registration')
+            return render(request, self.template_class, self.context)
+        messages.error(request, 'Something gone wrong. Please try again.')
         self.context['registration_form'] = form
         return render(request, self.template_class, self.context)
+
+
+class ActivateAccountView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            uid = force_text(urlsafe_base64_decode(kwargs['uidb64']))
+            profile = Profile.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, Profile.DoesNotExist):
+            profile = None
+        if profile is not None and account_activation_token.check_token(profile, kwargs['token']):
+            profile.is_active = True
+
+            # Create temporary attribute to send welcome message
+            # When it's done, delete that attribute
+            try:
+                profile._sendwelcomemessage = True
+                profile.save()
+            finally:
+                del profile._sendwelcomemessage
+
+            login(request, profile)
+            messages.success(request, "Thank you for your confirmation. Your account is activated!")
+            return redirect('trip-plans')
+        messages.error(request, "Activation link is invalid. Try again")
+        return redirect('password_reset')
 
 
 class LoginView(View):

@@ -47,7 +47,11 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'rest_framework',
     'django_extensions',
+    'django.contrib.sites'
 ]
+
+SITE_ID = 1
+PASSWORD_RESET_TIMEOUT = 86400  # reset token after 24 hours
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

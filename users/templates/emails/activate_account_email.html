@@ -1,0 +1,12 @@
+{% autoescape off %}
+    Hi {{ profile.username }},
+
+    You're receiving this email because you need to activate your account for Trip Management App.
+    Click the link below to activate:
+
+    http://{{ domain }}{% url 'activate-account' uidb64=uid token=token %}
+
+
+    Have a nice day!
+    The Trip Management Team
+{% endautoescape %}
