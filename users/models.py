@@ -12,7 +12,7 @@ class MyAccountManager(BaseUserManager):
     Custom user model manager where email is the unique identifiers
     for authentication instead of usernames.
     """
-    def create_user(self, email, username, password=None):
+    def create_user(self, email, username, site=None, password=None):
         """
         Create and save a User with the given email and password and username.
         """
@@ -23,6 +23,7 @@ class MyAccountManager(BaseUserManager):
         user = self.model(
             email=self.normalize_email(email),
             username=username,
+            site=Site.objects.get_current(),
         )
         user.is_admin = False
         user.is_superuser = False
@@ -32,6 +33,8 @@ class MyAccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, username, password):
+        if password is None:
+            raise TypeError('Superusers must have a password.')
         user = self.create_user(
             email=self.normalize_email(email),
             username=username,

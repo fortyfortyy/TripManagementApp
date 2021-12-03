@@ -13,6 +13,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+# pip3 install python-dotenv
+# Used to retrieve secret keys from a file only I have access to
+from dotenv import load_dotenv
+load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l7)uzr*+gnm^ycg1&q-h5xtrzv5p+g7r5z&*$@q1vso6*8thme'
+SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -95,8 +100,8 @@ DATABASES = {
         'HOST': '127.0.0.1',
         'NAME': 'tripplanapp',
         'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
+        'USER': 'postgresuser',
+        'PASSWORD': 'postgresuser',
     }
 }
 
@@ -139,11 +144,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 #     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'    # During development only for tests
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
+EMAIL_HOST = str(os.getenv('EMAIL_HOST'))
+EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'tripmanagementapp@gmail.com'
-EMAIL_HOST_PASSWORD = 'aaaaaaaaaaaaaaaaaa'
+EMAIL_HOST_USER = str(os.getenv('EMAIL_HOST_USER'))
+EMAIL_HOST_PASSWORD = str(os.getenv('EMAIL_HOST_PASSWORD'))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/

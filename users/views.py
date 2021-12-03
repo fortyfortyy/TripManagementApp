@@ -56,7 +56,7 @@ class UserView(LoginRequiredMixin, View):
 
 class RegisterView(View):
     """
-    Create the user account and also log in.
+    Create the user account and activate account by link sent to given email.
     """
     form_class = CustomUserCreationForm
     template_class = 'users/register.html'
